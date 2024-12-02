@@ -32,14 +32,18 @@ You can buy the ESP32 Marauder using [this link](https://www.tindie.com/products
 
 # T-Deck Edition
 This is an extremely early work in progress. It's not cleaned up or stable yet. And lots of features aren't fully working. A quick summary of the current progress is below.
-
+```
 [X] Boots
 [X] Serial and CLI both work
 [X] ST7899 Screen works
-[X] GT911 Touch library ***BUGGY*** TODO(@jstockdale): Fix multiple touch registrations from one press
-    Note: Mitigate touchscreen bugs by minimizing the area you touch. Use a small touchscreen pen if necessary.
-[X] L76K GPS works (if it stops working, reset your device, if that doesn't work, power off and back on)
-
-I recommend using the excellent M5Launcher (https://github.com/bmorcelli/M5Stick-Launcher) from @bmorcelli to load this and other firmware from the sd card. This makes development easier and also allows you to quick switch between different useful firmwares (eg. Meshtastic, Marauder, and more!)
+[X] GT911 Touch library
+    ***BUGGY*** TODO(@jstockdale): Fix multiple touch registrations from one press
+    Note: Mitigate touchscreen bugs by minimizing the area you touch.
+    Use a small touchscreen pen if necessary.
+[X] L76K GPS works
+   If it stops working, reset your device.
+   If that doesn't work, power off and back on.
+```
+I recommend using the excellent [M5Launcher](https://github.com/bmorcelli/M5Stick-Launcher) from @bmorcelli to load this and other firmware from the sd card. This makes development easier and also allows you to quick switch between different useful firmwares (eg. Meshtastic, Marauder, and more!)
 
 Please direct any feedback to the Issues page. This is alpha, pre-release software. And comes with no warranty of fitness or guarantees of any time. Use at your own risk. Thanks! :-)
