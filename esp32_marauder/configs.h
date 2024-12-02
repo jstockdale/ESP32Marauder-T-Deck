@@ -299,23 +299,23 @@
     #endif
 
     #ifdef MARAUDER_V6_1
-      #define L_BTN -1
+      #define L_BTN 1
       #define C_BTN 0
-      #define U_BTN -1
-      #define R_BTN -1
-      #define D_BTN -1
+      #define U_BTN 2
+      #define R_BTN 15
+      #define D_BTN 3
 
-      //#define HAS_L
-      //#define HAS_R
-      //#define HAS_U
-      //#define HAS_D
+      #define HAS_L
+      #define HAS_R
+      #define HAS_U
+      #define HAS_D
       #define HAS_C
 
-      #define L_PULL true
-      #define C_PULL true
-      #define U_PULL true
-      #define R_PULL true
-      #define D_PULL true
+      #define L_PULL false
+      #define C_PULL false
+      #define U_PULL false
+      #define R_PULL false
+      #define D_PULL false
     #endif  
 
   #endif
@@ -532,7 +532,7 @@
       #define TEXT_HEIGHT 16 // Height of text to be printed and scrolled
       #define BOT_FIXED_AREA 0 // Number of lines in bottom fixed area (lines counted from bottom of screen)
       #define TOP_FIXED_AREA 48 // Number of lines in top fixed area (lines counted from top of screen)
-      #define YMAX 320 // Bottom of screen area
+      #define YMAX 240 // Bottom of screen area
       #define minimum(a,b)     (((a) < (b)) ? (a) : (b))
       //#define MENU_FONT NULL
       #define MENU_FONT &FreeMono9pt7b // Winner

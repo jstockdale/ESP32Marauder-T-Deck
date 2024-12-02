@@ -4592,7 +4592,8 @@ void WiFiScan::activeEapolSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t
       y_pos_z = 0;
       boolean pressed = false;
   
-      int16_t t_x = 0, t_y = 0; // To store the touch coordinates
+      int16_t t_x[5] = {0,0,0,0,0}, t_y[5] = {0,0,0,0,0}; // To store the touch coordinates
+      int16_t tmp_x[5] = {0,0,0,0,0}, tmp_y[5] = {0,0,0,0,0}; // To store the touch coordinates
   
       // Do the touch stuff
       #ifdef HAS_ST7789
@@ -4600,18 +4601,18 @@ void WiFiScan::activeEapolSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t
       #endif
   
       if (pressed) {
-        touch.getPoint(&t_x, &t_y, touch.getSupportTouchPoint());
+        touch.getPoint(t_x, t_y, touch.getSupportTouchPoint());
         Serial.print("Got touch | X: ");
-        Serial.print(t_x);
+        Serial.print(t_x[0]);
         Serial.print(" Y: ");
-        Serial.println(t_y);
+        Serial.println(t_y[0]);
       }
   
   
       // Check buttons for presses
       for (uint8_t b = 0; b < BUTTON_ARRAY_LEN; b++)
       {
-        if (pressed && display_obj.key[b].contains(t_x, t_y))
+        if (pressed && display_obj.key[b].contains(t_x[0], t_y[0]))
         {
           display_obj.key[b].press(true);
         } else {
@@ -4624,7 +4625,7 @@ void WiFiScan::activeEapolSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t
       {
         if (display_obj.key[b].justPressed())
         {
-          Serial.println("Bro, key pressed");
+          Serial.println("Key pressed");
           //do_break = true;
         }
   
@@ -4635,7 +4636,7 @@ void WiFiScan::activeEapolSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t
           // Channel - button pressed
           if (b == 4) {
             if (set_channel > 1) {
-              Serial.println("Shit channel down");
+              Serial.println("Shift channel down");
               set_channel--;
               delay(70);
               display_obj.tft.fillRect(127, 0, 193, 28, TFT_BLACK);
@@ -4649,7 +4650,7 @@ void WiFiScan::activeEapolSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t
           // Channel + button pressed
           else if (b == 5) {
             if (set_channel < MAX_CHANNEL) {
-              Serial.println("Shit channel up");
+              Serial.println("Shift channel up");
               set_channel++;
               delay(70);
               display_obj.tft.fillRect(127, 0, 193, 28, TFT_BLACK);
@@ -4746,7 +4747,7 @@ void WiFiScan::activeEapolSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t
       y_pos_z = 0;
       boolean pressed = false;
       
-      int16_t t_x = 0, t_y = 0; // To store the touch coordinates
+      int16_t t_x[5] = {0,0,0,0,0}, t_y[5] = {0,0,0,0,0}; // To store the touch coordinates
   
       // Do the touch stuff
       #ifdef HAS_ST7789
@@ -4754,18 +4755,18 @@ void WiFiScan::activeEapolSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t
       #endif
   
       if (pressed) {
-        touch.getPoint(&t_x, &t_y, touch.getSupportTouchPoint());
+        touch.getPoint(t_x, t_y, touch.getSupportTouchPoint());
         Serial.print("Got touch | X: ");
-        Serial.print(t_x);
+        Serial.print(t_x[0]);
         Serial.print(" Y: ");
-        Serial.println(t_y);
+        Serial.println(t_y[0]);
       }
   
   
       // Check buttons for presses
       for (uint8_t b = 0; b < BUTTON_ARRAY_LEN; b++)
       {
-        if (pressed && display_obj.key[b].contains(t_x, t_y))
+        if (pressed && display_obj.key[b].contains(t_x[0], t_y[0]))
         {
           display_obj.key[b].press(true);
         } else {
@@ -4778,7 +4779,7 @@ void WiFiScan::activeEapolSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t
       {
         if (display_obj.key[b].justPressed())
         {
-          Serial.println("Bro, key pressed");
+          Serial.println("Key pressed");
           //do_break = true;
         }
   

@@ -23,7 +23,7 @@ MenuFunctions::MenuFunctions()
 #ifdef HAS_ST7789
   uint8_t MenuFunctions::updateTouch(int16_t *x, int16_t *y, uint16_t threshold) {
     if (!display_obj.headless_mode)
-      return touch.isPressed() && touch.getPoint(x, y);
+      return touch.isPressed() && touch.getPoint(x, y, touch.getSupportTouchPoint());
     else
       return !display_obj.headless_mode;
   }
@@ -57,31 +57,31 @@ MenuFunctions::MenuFunctions()
   {
     extern Display display_obj;
     
-    int16_t touchX, touchY;
+    int16_t touchX[5], touchY[5];
   
     bool touched = touch.isPressed();
-    touch.getPoint(&touchX, &touchY, 600);
+    touch.getPoint(touchX, touchY, touch.getSupportTouchPoint());
   
     if(!touched)
     {
       return false;
     }
   
-    if(touchX>WIDTH_1 || touchY > HEIGHT_1)
+    if(touchX[0]>WIDTH_1 || touchY[0] > HEIGHT_1)
     {
       Serial.println("Y or y outside of expected parameters..");
       Serial.print("y:");
-      Serial.print(touchX);
+      Serial.print(touchX[0]);
       Serial.print(" x:");
-      Serial.print(touchY);
+      Serial.print(touchY[0]);
     }
     else
     {
   
       data->state = touched ? LV_INDEV_STATE_PR : LV_INDEV_STATE_REL; 
        
-      data->point.x = touchX;
-      data->point.y = touchY;
+      data->point.x = touchX[0];
+      data->point.y = touchY[0];
   
     }
   
@@ -618,7 +618,7 @@ void MenuFunctions::main(uint32_t currentTime)
 
   boolean pressed = false;
   // This is code from bodmer's keypad example
-  int16_t t_x = 0, t_y = 0; // To store the touch coordinates
+  int16_t t_x[5] = {0,0,0,0,0}, t_y[5] = {0,0,0,0,0}; // To store the touch coordinates
 
   // Get the display buffer out of the way
   if ((wifi_scan_obj.currentScanMode != WIFI_SCAN_OFF ) &&
@@ -639,7 +639,7 @@ void MenuFunctions::main(uint32_t currentTime)
   // getTouch causes a 10ms delay which makes beacon spam less effective
   #ifdef HAS_ST7789
     if (!this->disable_touch)
-      pressed = this->updateTouch(&t_x, &t_y);
+        pressed = this->updateTouch(t_x, t_y);
   #endif
 
 
@@ -796,7 +796,7 @@ void MenuFunctions::main(uint32_t currentTime)
     {
       // Need this to set all keys to false
       for (uint8_t b = 0; b < BUTTON_ARRAY_LEN; b++) {
-        if (pressed && display_obj.key[b].contains(t_x, t_y)) {
+        if (pressed && display_obj.key[b].contains(t_x[0], t_y[0])) {
           display_obj.key[b].press(true);  // tell the button it is pressed
         } else {
           display_obj.key[b].press(false);  // tell the button it is NOT pressed
@@ -935,8 +935,8 @@ void MenuFunctions::battery(bool initial)
     uint8_t n = 0;
     byte battery_analog_sample[10];
     byte deviation;
-    if (battery_count == BATTERY_CHECK - 5)  digitalWrite(BATTERY_PIN, HIGH);
-    else if (battery_count == 5) digitalWrite(BATTERY_PIN, LOW);
+    //if (battery_count == BATTERY_CHECK - 5)  digitalWrite(BATTERY_PIN, HIGH);
+    //else if (battery_count == 5) digitalWrite(BATTERY_PIN, LOW);
     if (battery_count == 0) {
       battery_analog = 0;
       for (n = 9; n > 0; n--)battery_analog_array[n] = battery_analog_array[n - 1];
@@ -994,29 +994,28 @@ void MenuFunctions::battery2(bool initial)
 void MenuFunctions::battery(bool initial)
 {
   #ifdef HAS_BATTERY
-    uint16_t the_color;
-    if (battery_obj.i2c_supported)
-    {
-      // Could use int compare maybe idk
-      if (((String)battery_obj.battery_level != "25") && ((String)battery_obj.battery_level != "0"))
-        the_color = TFT_GREEN;
-      else
-        the_color = TFT_RED;
+  uint16_t the_color;
+  //Serial.println("Drawing battery: " + String(battery_obj.battery_level));
+  if (battery_obj.battery_level > 100) the_color = TFT_BLUE;
+  else if (battery_obj.battery_level < 20) the_color = TFT_RED;
+  else if (battery_obj.battery_level < 40)  the_color = TFT_YELLOW;
+  else the_color = TFT_GREEN;
 
-      if ((battery_obj.battery_level != battery_obj.old_level) || (initial)) {
-        battery_obj.old_level = battery_obj.battery_level;
-        display_obj.tft.fillRect(204, 0, SCREEN_WIDTH, STATUS_BAR_WIDTH, STATUSBAR_COLOR);
-        display_obj.tft.setCursor(0, 1);
-        display_obj.tft.drawXBitmap(186,
-                                    0,
-                                    menu_icons[STATUS_BAT],
-                                    16,
-                                    16,
-                                    STATUSBAR_COLOR,
-                                    the_color);
-        display_obj.tft.drawString((String)battery_obj.battery_level + "%", 204, 0, 2);
-      }
-    }
+  display_obj.tft.setTextColor(the_color, STATUSBAR_COLOR);
+  display_obj.tft.fillRect(240, 0, 50, STATUS_BAR_WIDTH, STATUSBAR_COLOR);
+  display_obj.tft.drawXBitmap(240,
+                              0,
+                              menu_icons[STATUS_BAT],
+                              16,
+                              16,
+                              STATUSBAR_COLOR,
+                              the_color);
+  if(battery_obj.battery_level > 100) {
+    display_obj.tft.drawString("CHG", 256, 0, 2);
+  }
+  else {
+    display_obj.tft.drawString( String(battery_obj.battery_level) + "%", 256, 0, 2);
+  }
   #endif
 }
 void MenuFunctions::battery2(bool initial)
@@ -1103,8 +1102,8 @@ void MenuFunctions::updateStatusBar()
   }
 
   // Draw battery info
-  //MenuFunctions::battery(false);
-  display_obj.tft.fillRect(190, 0, SCREEN_WIDTH, STATUS_BAR_WIDTH, STATUSBAR_COLOR);
+  MenuFunctions::battery(false);
+  //display_obj.tft.fillRect(190, 0, SCREEN_WIDTH, STATUS_BAR_WIDTH, STATUSBAR_COLOR);
   
   #ifdef HAS_ST7789
     #ifdef HAS_BUTTONS
@@ -1258,7 +1257,7 @@ void MenuFunctions::orientDisplay()
 {
   display_obj.tft.init();
 
-  display_obj.tft.setRotation(0); // Portrait
+  display_obj.tft.setRotation(1); // Portrait
 
   display_obj.tft.setCursor(0, 0);
 

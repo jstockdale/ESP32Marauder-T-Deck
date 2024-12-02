@@ -31,9 +31,8 @@ extern Settings settings_obj;
 #define FLASH_BUTTON 0
 
 #if BATTERY_ANALOG_ON == 1
-#define BATTERY_PIN 13
-#define ANALOG_PIN 34
-#define CHARGING_PIN 27
+#define ANALOG_PIN 4
+//#define CHARGING_PIN 10
 #endif
 
 // Icon definitions

@@ -11,6 +11,8 @@ https://www.online-utility.org/image/convert/to/XBM
 
 TouchDrvGT911 touch;
 
+#define BATTERY_ANALOG_ON   0
+
 #define BOARD_POWERON       10
 
 #define BOARD_I2S_WS        5
@@ -212,8 +214,7 @@ void setup()
   
   backlightOff();
 #if BATTERY_ANALOG_ON == 1
-  pinMode(BATTERY_PIN, OUTPUT);
-  pinMode(CHARGING_PIN, INPUT);
+  pinMode(BOARD_BAT_ADC, OUTPUT);
 #endif
   
   // Preset SPI CS pins to avoid bus conflicts
@@ -426,7 +427,7 @@ void loop()
 
   #ifdef HAS_SCREEN
     display_obj.tft.setTextColor(TFT_GREEN, TFT_BLACK);
-    display_obj.tft.drawCentreString(String(currentTime), TFT_WIDTH, TFT_HEIGHT * 0.05, 1);
+    display_obj.tft.drawString(String(currentTime), 280, TFT_HEIGHT * 0.05, 1);
   #endif
 
   #ifdef SCREEN_BUFFER
