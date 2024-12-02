@@ -32,6 +32,8 @@ void Display::RunSetup()
     tft.setRotation(1);
   #endif
 
+  tft.setRotation(1);
+
   tft.setCursor(0, 0);
 
   #ifdef HAS_ILI9341

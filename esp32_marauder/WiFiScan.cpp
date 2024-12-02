@@ -1,5 +1,8 @@
 #include "WiFiScan.h"
 #include "lang_var.h"
+#include "TouchDrvGT911.hpp"
+
+TouchDrvGT911 touch;
 
 int num_beacon = 0;
 int num_deauth = 0;
@@ -498,14 +501,6 @@ WiFiScan::WiFiScan()
 {
 }
 
-/*String WiFiScan::macToString(const Station& station) {
-  char macStr[18]; // 6 pairs of hex digits + 5 colons + null terminator
-  snprintf(macStr, sizeof(macStr), "%02X:%02X:%02X:%02X:%02X:%02X",
-           station.mac[0], station.mac[1], station.mac[2],
-           station.mac[3], station.mac[4], station.mac[5]);
-  return String(macStr);
-}*/
-
 void WiFiScan::RunSetup() {
   if (ieee80211_raw_frame_sanity_check(31337, 0, 0) == 1)
     this->wsl_bypass_enabled = true;
@@ -831,7 +826,7 @@ void WiFiScan::startWiFiAttacks(uint8_t scan_mode, uint16_t color, String title_
     display_obj.initScrollValues(true);
     display_obj.tft.setTextWrap(false);
     display_obj.tft.setTextColor(TFT_BLACK, color);
-    #ifdef HAS_ILI9341
+    #ifdef HAS_ST7789
       display_obj.tft.fillRect(0,16,TFT_WIDTH,16, color);
       display_obj.tft.drawCentreString((String)title_string,TFT_WIDTH / 2,16,2);
       display_obj.touchToExit();
@@ -1382,7 +1377,7 @@ void WiFiScan::RunEvilPortal(uint8_t scan_mode, uint16_t color)
     display_obj.initScrollValues(true);
     display_obj.tft.setTextWrap(false);
     display_obj.tft.setTextColor(TFT_WHITE, color);
-    #ifdef HAS_ILI9341
+    #ifdef HAS_ST7789
       display_obj.tft.fillRect(0,16,240,16, color);
       display_obj.tft.drawCentreString(" Evil Portal ",120,16,2);
       display_obj.touchToExit();
@@ -1426,7 +1421,7 @@ void WiFiScan::RunAPScan(uint8_t scan_mode, uint16_t color)
     display_obj.initScrollValues(true);
     display_obj.tft.setTextWrap(false);
     display_obj.tft.setTextColor(TFT_WHITE, color);
-    #ifdef HAS_ILI9341
+    #ifdef HAS_ST7789
       display_obj.tft.fillRect(0,16,240,16, color);
       display_obj.tft.drawCentreString(text_table4[44],120,16,2);
       display_obj.touchToExit();
@@ -1844,7 +1839,7 @@ void WiFiScan::RunPacketMonitor(uint8_t scan_mode, uint16_t color)
 
   startPcap("packet_monitor");
 
-  #ifdef HAS_ILI9341
+  #ifdef HAS_ST7789
     
     #ifdef HAS_SCREEN
       display_obj.tft.init();
@@ -1860,7 +1855,7 @@ void WiFiScan::RunPacketMonitor(uint8_t scan_mode, uint16_t color)
         uint16_t calData[5] = { 213, 3469, 320, 3446, 1 }; // Landscape TFT DIY
         Serial.println("Using TFT DIY");
       #endif
-      display_obj.tft.setTouch(calData);
+      //display_obj.tft.setTouch(calData);
     
       //display_obj.tft.setFreeFont(1);
       display_obj.tft.setFreeFont(NULL);
@@ -1886,7 +1881,7 @@ void WiFiScan::RunPacketMonitor(uint8_t scan_mode, uint16_t color)
       display_obj.initScrollValues(true);
       display_obj.tft.setTextWrap(false);
       display_obj.tft.setTextColor(TFT_WHITE, color);
-      #ifdef HAS_ILI9341
+      #ifdef HAS_ST7789
         display_obj.tft.fillRect(0,16,240,16, color);
         display_obj.tft.drawCentreString(text_table4[38],120,16,2);
         display_obj.touchToExit();
@@ -1923,7 +1918,7 @@ void WiFiScan::RunEapolScan(uint8_t scan_mode, uint16_t color)
   
   num_eapol = 0;
 
-  #ifdef HAS_ILI9341
+  #ifdef HAS_ST7789
     #ifdef HAS_SCREEN
       display_obj.tft.init();
       display_obj.tft.setRotation(1);
@@ -1940,7 +1935,7 @@ void WiFiScan::RunEapolScan(uint8_t scan_mode, uint16_t color)
         uint16_t calData[5] = { 213, 3469, 320, 3446, 1 }; // Landscape TFT DIY
         //Serial.println("Using TFT DIY");
       #endif
-      display_obj.tft.setTouch(calData);
+      //display_obj.tft.setTouch(calData);
     
       display_obj.tft.setFreeFont(NULL);
       display_obj.tft.setTextSize(1);
@@ -1965,7 +1960,7 @@ void WiFiScan::RunEapolScan(uint8_t scan_mode, uint16_t color)
       display_obj.initScrollValues(true);
       display_obj.tft.setTextWrap(false);
       display_obj.tft.setTextColor(TFT_WHITE, color);
-      #ifdef HAS_ILI9341
+      #ifdef HAS_ST7789
         display_obj.tft.fillRect(0,16,240,16, color);
         display_obj.tft.drawCentreString(text_table4[38],120,16,2);
         display_obj.touchToExit();
@@ -2028,7 +2023,7 @@ void WiFiScan::RunMimicFlood(uint8_t scan_mode, uint16_t color) {
     display_obj.initScrollValues(true);
     display_obj.tft.setTextWrap(false);
     display_obj.tft.setTextColor(TFT_BLACK, color);
-    #ifdef HAS_ILI9341
+    #ifdef HAS_ST7789
       display_obj.tft.fillRect(0,16,240,16, color);
       display_obj.tft.drawCentreString(" Mimic Flood ",120,16,2);
       display_obj.touchToExit();
@@ -2070,7 +2065,7 @@ void WiFiScan::RunPwnScan(uint8_t scan_mode, uint16_t color)
     display_obj.initScrollValues(true);
     display_obj.tft.setTextWrap(false);
     display_obj.tft.setTextColor(TFT_WHITE, color);
-    #ifdef HAS_ILI9341
+    #ifdef HAS_ST7789
       display_obj.tft.fillRect(0,16,240,16, color);
       display_obj.tft.drawCentreString(text_table4[37],120,16,2);
       display_obj.touchToExit();
@@ -2107,40 +2102,6 @@ void WiFiScan::executeSourApple() {
     pAdvertising->stop();
   #endif
 }
-
-/*void WiFiScan::generateRandomName(char *name, size_t length) {
-    static const char alphabet[] = "abcdefghijklmnopqrstuvwxyz";
-    
-    // Generate the first character as uppercase
-    name[0] = 'A' + (rand() % 26);
-    
-    // Generate the remaining characters as lowercase
-    for (size_t i = 1; i < length - 1; ++i) {
-        name[i] = alphabet[rand() % (sizeof(alphabet) - 1)];
-    }
-    name[length - 1] = '\0';  // Null-terminate the string
-}*/
-
-/*const char* WiFiScan::generateRandomName() {
-  const char* charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  int len = rand() % 10 + 1; // Generate a random length between 1 and 10
-  char* randomName = (char*)malloc((len + 1) * sizeof(char)); // Allocate memory for the random name
-  for (int i = 0; i < len; ++i) {
-    randomName[i] = charset[rand() % strlen(charset)]; // Select random characters from the charset
-  }
-  randomName[len] = '\0'; // Null-terminate the string
-  return randomName;
-}*/
-
-/*void WiFiScan::generateRandomMac(uint8_t* mac) {
-  // Set the locally administered bit and unicast bit for the first byte
-  mac[0] = 0x02; // The locally administered bit is the second least significant bit
-
-  // Generate the rest of the MAC address
-  for (int i = 1; i < 6; i++) {
-    mac[i] = random(0, 255);
-  }
-}*/
 
 void WiFiScan::setBaseMacAddress(uint8_t macAddr[6]) {
   // Use ESP-IDF function to set the base MAC address
@@ -2328,7 +2289,7 @@ void WiFiScan::RunBeaconScan(uint8_t scan_mode, uint16_t color)
     display_obj.initScrollValues(true);
     display_obj.tft.setTextWrap(false);
     display_obj.tft.setTextColor(TFT_WHITE, color);
-    #ifdef HAS_ILI9341
+    #ifdef HAS_ST7789
       display_obj.tft.fillRect(0,16,240,16, color);
       if (scan_mode == WIFI_SCAN_AP)
         display_obj.tft.drawCentreString(text_table4[38],120,16,2);
@@ -2387,7 +2348,7 @@ void WiFiScan::RunStationScan(uint8_t scan_mode, uint16_t color)
     display_obj.initScrollValues(true);
     display_obj.tft.setTextWrap(false);
     display_obj.tft.setTextColor(TFT_WHITE, color);
-    #ifdef HAS_ILI9341
+    #ifdef HAS_ST7789
       display_obj.tft.fillRect(0,16,240,16, color);
       display_obj.tft.drawCentreString(text_table1[59],120,16,2);
       display_obj.touchToExit();
@@ -2431,7 +2392,7 @@ void WiFiScan::RunRawScan(uint8_t scan_mode, uint16_t color)
     display_obj.initScrollValues(true);
     display_obj.tft.setTextWrap(false);
     display_obj.tft.setTextColor(TFT_WHITE, color);
-    #ifdef HAS_ILI9341
+    #ifdef HAS_ST7789
       display_obj.tft.fillRect(0,16,240,16, color);
       if (scan_mode != WIFI_SCAN_SIG_STREN)
         display_obj.tft.drawCentreString(text_table1[58],120,16,2);
@@ -2477,7 +2438,7 @@ void WiFiScan::RunDeauthScan(uint8_t scan_mode, uint16_t color)
     display_obj.initScrollValues(true);
     display_obj.tft.setTextWrap(false);
     display_obj.tft.setTextColor(TFT_BLACK, color);
-    #ifdef HAS_ILI9341
+    #ifdef HAS_ST7789
       display_obj.tft.fillRect(0,16,240,16, color);
       display_obj.tft.drawCentreString(text_table4[39],120,16,2);
       display_obj.touchToExit();
@@ -2536,7 +2497,7 @@ void WiFiScan::RunProbeScan(uint8_t scan_mode, uint16_t color)
     display_obj.initScrollValues(true);
     display_obj.tft.setTextWrap(false);
     display_obj.tft.setTextColor(TFT_BLACK, color);
-    #ifdef HAS_ILI9341
+    #ifdef HAS_ST7789
       display_obj.tft.fillRect(0,16,240,16, color);
       display_obj.tft.drawCentreString(text_table4[40],120,16,2);
       display_obj.touchToExit();
@@ -2572,7 +2533,7 @@ void WiFiScan::RunSourApple(uint8_t scan_mode, uint16_t color) {
       display_obj.initScrollValues(true);
       display_obj.tft.setTextWrap(false);
       display_obj.tft.setTextColor(TFT_BLACK, color);
-      #ifdef HAS_ILI9341
+      #ifdef HAS_ST7789
         display_obj.tft.fillRect(0,16,240,16, color);
         display_obj.tft.drawCentreString("Sour Apple",120,16,2);
         display_obj.touchToExit();
@@ -2594,7 +2555,7 @@ void WiFiScan::RunSwiftpairSpam(uint8_t scan_mode, uint16_t color) {
       display_obj.initScrollValues(true);
       display_obj.tft.setTextWrap(false);
       display_obj.tft.setTextColor(TFT_BLACK, color);
-      #ifdef HAS_ILI9341
+      #ifdef HAS_ST7789
         display_obj.tft.fillRect(0,16,240,16, color);
         if (scan_mode == BT_ATTACK_SWIFTPAIR_SPAM)
           display_obj.tft.drawCentreString("Swiftpair Spam",120,16,2);
@@ -2640,7 +2601,7 @@ void WiFiScan::RunBluetoothScan(uint8_t scan_mode, uint16_t color)
         display_obj.initScrollValues(true);
         display_obj.tft.setTextWrap(false);
         display_obj.tft.setTextColor(TFT_BLACK, color);
-        #ifdef HAS_ILI9341
+        #ifdef HAS_ST7789
           display_obj.tft.fillRect(0,16,240,16, color);
           if (scan_mode == BT_SCAN_ALL)
             display_obj.tft.drawCentreString(text_table4[41],120,16,2);
@@ -2687,7 +2648,7 @@ void WiFiScan::RunBluetoothScan(uint8_t scan_mode, uint16_t color)
         display_obj.initScrollValues(true);
         display_obj.tft.setTextWrap(false);
         display_obj.tft.setTextColor(TFT_BLACK, color);
-        #ifdef HAS_ILI9341
+        #ifdef HAS_ST7789
           display_obj.tft.fillRect(0,16,240,16, color);
           if (scan_mode == BT_SCAN_WAR_DRIVE)
             display_obj.tft.drawCentreString("BT Wardrive",120,16,2);
@@ -4397,7 +4358,7 @@ void WiFiScan::wifiSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t type)
     const WifiMgmtHdr *hdr = &ipkt->hdr;
 
     // If we dont the buffer size is not 0, don't write or else we get CORRUPT_HEAP
-    #ifdef HAS_ILI9341
+    #ifdef HAS_ST7789
       if (snifferPacket->payload[0] == 0x80)
       {
         num_beacon++;
@@ -4631,14 +4592,15 @@ void WiFiScan::activeEapolSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t
       y_pos_z = 0;
       boolean pressed = false;
   
-      uint16_t t_x = 0, t_y = 0; // To store the touch coordinates
+      int16_t t_x = 0, t_y = 0; // To store the touch coordinates
   
       // Do the touch stuff
-      #ifdef HAS_ILI9341
-        pressed = display_obj.tft.getTouch(&t_x, &t_y);
+      #ifdef HAS_ST7789
+        pressed = touch.isPressed();
       #endif
   
       if (pressed) {
+        touch.getPoint(&t_x, &t_y, touch.getSupportTouchPoint());
         Serial.print("Got touch | X: ");
         Serial.print(t_x);
         Serial.print(" Y: ");
@@ -4784,14 +4746,15 @@ void WiFiScan::activeEapolSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t
       y_pos_z = 0;
       boolean pressed = false;
       
-      uint16_t t_x = 0, t_y = 0; // To store the touch coordinates
+      int16_t t_x = 0, t_y = 0; // To store the touch coordinates
   
       // Do the touch stuff
-      #ifdef HAS_ILI9341
-        pressed = display_obj.tft.getTouch(&t_x, &t_y);
+      #ifdef HAS_ST7789
+        pressed = touch.isPressed();
       #endif
   
       if (pressed) {
+        touch.getPoint(&t_x, &t_y, touch.getSupportTouchPoint());
         Serial.print("Got touch | X: ");
         Serial.print(t_x);
         Serial.print(" Y: ");
@@ -5134,7 +5097,7 @@ void WiFiScan::main(uint32_t currentTime)
   else if (currentScanMode == WIFI_PACKET_MONITOR)
   {
     #ifdef HAS_SCREEN
-      #ifdef HAS_ILI9341
+      #ifdef HAS_ST7789
         packetMonitorMain(currentTime);
       #endif
     #endif
@@ -5142,7 +5105,7 @@ void WiFiScan::main(uint32_t currentTime)
   else if (currentScanMode == WIFI_SCAN_EAPOL)
   {
     #ifdef HAS_SCREEN
-      #ifdef HAS_ILI9341
+      #ifdef HAS_ST7789
         eapolMonitorMain(currentTime);
       #endif
     #endif

@@ -9,8 +9,8 @@
 
 #include <Wire.h>
 
-#define I2C_SDA 33
-#define I2C_SCL 22
+#define I2C_SDA 18
+#define I2C_SCL 8
 #define IP5306_ADDR 0x75
 
 class BatteryInterface {

@@ -115,12 +115,12 @@
     #define HAS_BT
     #define HAS_BT_REMOTE
     #define HAS_BUTTONS
-    #define HAS_NEOPIXEL_LED
+    //#define HAS_NEOPIXEL_LED
     //#define HAS_PWR_MGMT
     #define HAS_SCREEN
     #define HAS_SD
     #define USE_SD
-    #define HAS_TEMP_SENSOR
+    //#define HAS_TEMP_SENSOR
     #define HAS_GPS
   #endif
 
@@ -394,7 +394,7 @@
 
     #ifdef MARAUDER_V4
       #define SCREEN_CHAR_WIDTH 40
-      #define HAS_ILI9341
+      #define HAS_ST7789
       #define BANNER_TEXT_SIZE 2
 
       #ifndef TFT_WIDTH
@@ -451,16 +451,16 @@
 
     #if defined(MARAUDER_V6) || defined(MARAUDER_V6_1)
       #define SCREEN_CHAR_WIDTH 40
-      #define HAS_ILI9341
+      #define HAS_ST7789
     
       #define BANNER_TEXT_SIZE 2
 
       #ifndef TFT_WIDTH
-        #define TFT_WIDTH 240
+        #define TFT_WIDTH 320
       #endif
 
       #ifndef TFT_HEIGHT
-        #define TFT_HEIGHT 320
+        #define TFT_HEIGHT 240
       #endif
 
       #define TFT_DIY
@@ -473,7 +473,7 @@
       #define TEXT_HEIGHT 16 // Height of text to be printed and scrolled
       #define BOT_FIXED_AREA 0 // Number of lines in bottom fixed area (lines counted from bottom of screen)
       #define TOP_FIXED_AREA 48 // Number of lines in top fixed area (lines counted from top of screen)
-      #define YMAX 320 // Bottom of screen area
+      #define YMAX 240 // Bottom of screen area
       #define minimum(a,b)     (((a) < (b)) ? (a) : (b))
       //#define MENU_FONT NULL
       #define MENU_FONT &FreeMono9pt7b // Winner
@@ -509,7 +509,7 @@
 
     #ifdef MARAUDER_KIT
       #define SCREEN_CHAR_WIDTH 40
-      #define HAS_ILI9341
+      #define HAS_ST7789
     
       #define BANNER_TEXT_SIZE 2
 
@@ -828,7 +828,7 @@
     #endif
 
     #ifdef MARAUDER_V6_1
-      #define SD_CS 14
+      #define SD_CS 39
     #endif
 
     #ifdef MARAUDER_KIT
@@ -966,9 +966,9 @@
   //// GPS STUFF
   #ifdef HAS_GPS
     #if defined(MARAUDER_V6) || defined(MARAUDER_V6_1)
-      #define GPS_SERIAL_INDEX 2
-      #define GPS_TX 4
-      #define GPS_RX 13
+      #define GPS_SERIAL_INDEX 1
+      #define GPS_TX 43
+      #define GPS_RX 44
       #define mac_history_len 512
     #elif defined(MARAUDER_V4)
       #define GPS_SERIAL_INDEX 2

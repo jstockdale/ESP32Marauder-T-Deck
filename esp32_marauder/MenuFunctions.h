@@ -156,7 +156,7 @@ class MenuFunctions
     #ifdef HAS_BT
       Menu airtagMenu;
     #endif
-    #ifndef HAS_ILI9341
+    #ifndef HAS_ST7789
       Menu wifiStationMenu;
     #endif
 
@@ -187,11 +187,11 @@ class MenuFunctions
     void displaySetting(String key, Menu* menu, int index);
     void buttonSelected(uint8_t b, int8_t x = -1);
     void buttonNotSelected(uint8_t b, int8_t x = -1);
-    #if (!defined(HAS_ILI9341) && defined(HAS_BUTTONS))
+    #if (!defined(HAS_ST7789) && defined(HAS_BUTTONS))
       void miniKeyboard(Menu * targetMenu);
     #endif
 
-    uint8_t updateTouch(uint16_t *x, uint16_t *y, uint16_t threshold = 600);
+    uint8_t updateTouch(int16_t *x, int16_t *y, uint16_t threshold = 600);
 
   public:
     MenuFunctions();

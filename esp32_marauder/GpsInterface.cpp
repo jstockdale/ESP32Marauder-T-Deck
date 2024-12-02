@@ -8,7 +8,9 @@ char nmeaBuffer[100];
 
 MicroNMEA nmea(nmeaBuffer, sizeof(nmeaBuffer));
 
-HardwareSerial Serial2(GPS_SERIAL_INDEX);
+HardwareSerial Serial1(GPS_SERIAL_INDEX);
+
+static bool GPS_Recovery();
 
 void GpsInterface::begin() {
 
@@ -23,23 +25,88 @@ void GpsInterface::begin() {
     Serial.println("Activated GPS");
     delay(100);
   #endif*/
+    String ver = "";
+    // L76K GPS USE 9600 BAUDRATE
+    Serial1.begin(38400, SERIAL_8N1, GPS_RX, GPS_TX);
+    bool result = false;
+    uint32_t startTimeout ;
+    for (int i = 0; i < 3; ++i) {
+        Serial1.write("$PCAS03,0,0,0,0,0,0,0,0,0,0,,,0,0*02\r\n");
+        delay(5);
+        // Get version information
+        startTimeout = millis() + 3000;
+        Serial.print("Try to init L76K . Wait stop .");
+        while (Serial1.available()) {
+            Serial.print(".");
+            Serial1.readString();
+            if (millis() > startTimeout) {
+                Serial.println("Wait L76K stop NMEA timeout!");
+                result = false;
+                break;
+            }
+        };
+        Serial.println();
+        Serial1.flush();
+        delay(200);
 
+        Serial1.write("$PCAS06,0*1B\r\n");
+        startTimeout = millis() + 500;
+        ver = "";
+        while (!Serial1.available()) {
+            if (millis() > startTimeout) {
+                Serial.println("Get L76K timeout!");
+                result = false;
+                break;
+            }
+        };
+        Serial.println();
+        Serial1.flush();
+        delay(200);
+
+        Serial1.write("$PCAS06,0*1B\r\n");
+        startTimeout = millis() + 500;
+        ver = "";
+        while (!Serial1.available()) {
+            if (millis() > startTimeout) {
+                Serial.println("Get L76K timeout!");
+                result = false;
+                break;
+            }
+        }
+        Serial1.setTimeout(10);
+        ver = Serial1.readStringUntil('\n');
+        Serial.print("Got ver: " + ver);
+        if (ver.startsWith("$GPTXT,01,01,02")) {
+            Serial.println("L76K GNSS init succeeded, using L76K GNSS Module\n");
+            result = true;
+            break;
+        }
+        delay(500);
+    }
+    Serial.print("Initialize the L76K Chip, use GPS + GLONASS\n");
+    // Initialize the L76K Chip, use GPS + GLONASS
+    Serial1.write("$PCAS04,5*1C\r\n");
+    delay(250);
+    Serial1.write("$PCAS03,1,1,1,1,1,1,1,1,1,1,,,0,0*26\r\n");
+    delay(250);
+    // Switch to Vehicle Mode, since SoftRF enables Aviation < 2g
+    //Serial1.write("$PCAS11,3*1E\r\n");
   
-  Serial2.begin(9600, SERIAL_8N1, GPS_TX, GPS_RX);
+  //Serial1.begin(9600, SERIAL_8N1, GPS_TX, GPS_RX);
 
-  MicroNMEA::sendSentence(Serial2, "$PSTMSETPAR,1201,0x00000042");
-  MicroNMEA::sendSentence(Serial2, "$PSTMSAVEPAR");
+  //MicroNMEA::sendSentence(Serial1, "$PSTMSETPAR,1201,0x00000042");
+  //MicroNMEA::sendSentence(Serial1, "$PSTMSAVEPAR");
 
-  MicroNMEA::sendSentence(Serial2, "$PSTMSRR");
+  //MicroNMEA::sendSentence(Serial1, "$PSTMSRR");
 
   delay(1000);
 
-  if (Serial2.available()) {
+  if (Serial1.available()) {
     Serial.println("GPS Attached Successfully");
     this->gps_enabled = true;
-    while (Serial2.available()) {
+    while (Serial1.available()) {
       //Fetch the character one by one
-      char c = Serial2.read();
+      char c = Serial1.read();
       //Serial.print(c);
       //Pass the character to the library
       nmea.process(c);
@@ -321,7 +388,7 @@ void GpsInterface::flush_queue_textin(){
 }
 
 void GpsInterface::sendSentence(const char* sentence){
-  MicroNMEA::sendSentence(Serial2, sentence);
+  MicroNMEA::sendSentence(Serial1, sentence);
 }
 
 void GpsInterface::sendSentence(Stream &s, const char* sentence){
@@ -652,9 +719,9 @@ String GpsInterface::getNmeaNotparsed() {
 }
 
 void GpsInterface::main() {
-  while (Serial2.available()) {
+  while (Serial1.available()) {
     //Fetch the character one by one
-    char c = Serial2.read();
+    char c = Serial1.read();
     //Serial.print(c);
     //Pass the character to the library
     nmea.process(c);
