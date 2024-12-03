@@ -28,6 +28,7 @@ void BatteryInterface::RunSetup() {
 int8_t BatteryInterface::getBatteryLevel() {
   int bat_val = analogRead(BOARD_BAT_ADC);
   //Serial.println("Battery reading: " + String(bat_val));
+  this->battery_value = bat_val;
 
   //Wire.beginTransmission(IP5306_ADDR);
   //Wire.write(0x78);
@@ -48,7 +49,7 @@ int8_t BatteryInterface::getBatteryLevel() {
     return 100;
   }
   else if (bat_val > 1600) {
-    return (bat_val - 1600)/(2500-1600);
+    return 100*(bat_val - 1600)/(2500-1600);
   }
   else {
     return 0;
