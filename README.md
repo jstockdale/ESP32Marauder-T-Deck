@@ -49,7 +49,6 @@ This is an extremely early work in progress. It's not cleaned up or stable yet. 
 [ ] Trackball - TODO(jstockdale): Add trackball support (in lieu of buttons)
 [ ] Keyboard - TODO(jstockdale): Add keyboard support
 [ ] Screen - TODO(jstockdale): Support turning off screen backlight
-
 ```
 I recommend using the excellent [M5Launcher](https://github.com/bmorcelli/M5Stick-Launcher) from @bmorcelli to load this and other firmware from the sd card. This makes development easier and also allows you to quick switch between different useful firmwares (eg. Meshtastic, Marauder, and more!)
 
