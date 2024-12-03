@@ -43,6 +43,13 @@ This is an extremely early work in progress. It's not cleaned up or stable yet. 
 [X] L76K GPS works
    If it stops working, reset your device.
    If that doesn't work, power off and back on.
+[X] Battery level works
+[X] SD Card works
+--
+[ ] Trackball - TODO(jstockdale): Add trackball support (in lieu of buttons)
+[ ] Keyboard - TODO(jstockdale): Add keyboard support
+[ ] 
+
 ```
 I recommend using the excellent [M5Launcher](https://github.com/bmorcelli/M5Stick-Launcher) from @bmorcelli to load this and other firmware from the sd card. This makes development easier and also allows you to quick switch between different useful firmwares (eg. Meshtastic, Marauder, and more!)
 
