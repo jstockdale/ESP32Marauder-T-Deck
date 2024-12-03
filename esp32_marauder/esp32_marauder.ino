@@ -315,7 +315,7 @@ void setup()
                       16,
                       16,
                       TFT_BLACK,
-                      TFT_GREEN);
+                      TFT_RED);
         //display_obj.tft.drawString("BAT", 0, 0, 1);
         display_obj.tft.drawCentreString("SD", 320/2 - 36, 240 * 0.90, 1);
         display_obj.tft.setTextColor(TFT_CYAN, TFT_BLACK);
