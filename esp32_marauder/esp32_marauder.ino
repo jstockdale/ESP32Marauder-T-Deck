@@ -295,7 +295,7 @@ void setup()
         display_obj.tft.println(F(text_table0[3]));
         display_obj.tft.drawXBitmap(320/2 - 36,
                       240*.85,
-                      menu_icons[STATUS_BAT],
+                      menu_icons[STATUS_SD],
                       16,
                       16,
                       TFT_BLACK,
