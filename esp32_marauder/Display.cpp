@@ -250,7 +250,7 @@ void Display::tftDrawExitScaleButtons()
 void Display::twoPartDisplay(String center_text)
 {
   tft.setTextColor(TFT_BLACK, TFT_YELLOW);
-  tft.fillRect(0,16,HEIGHT_1,144, TFT_YELLOW);
+  tft.fillRect(0,16,WIDTH_1,144, TFT_YELLOW);
   //tft.drawCentreString(center_text,120,82,1);
   tft.setTextWrap(true);
   tft.setFreeFont(NULL);
@@ -265,8 +265,8 @@ void Display::twoPartDisplay(String center_text)
 void Display::touchToExit()
 {
   tft.setTextColor(TFT_BLACK, TFT_LIGHTGREY);
-  tft.fillRect(0,32,HEIGHT_1,16, TFT_LIGHTGREY);
-  tft.drawCentreString(text11,120,32,2);
+  tft.fillRect(0,32,WIDTH_1,16, TFT_LIGHTGREY);
+  tft.drawCentreString(text11,160,32,2);
 }
 
 

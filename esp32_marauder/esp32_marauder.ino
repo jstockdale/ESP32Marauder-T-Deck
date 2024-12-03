@@ -238,9 +238,9 @@ void setup()
 
   #ifdef HAS_SCREEN
     Serial.println("WIDTH, HEIGHT: " + String(TFT_WIDTH) + ", " + String(TFT_HEIGHT));
-    display_obj.tft.drawCentreString("ESP32 Marauder", TFT_WIDTH/2, TFT_HEIGHT * 0.33, 1);
-    display_obj.tft.drawCentreString("JustCallMeKoko", TFT_WIDTH/2, TFT_HEIGHT * 0.5, 1);
-    display_obj.tft.drawCentreString(display_obj.version_number, TFT_WIDTH/2, TFT_HEIGHT * 0.66, 1);
+    display_obj.tft.drawCentreString("ESP32 Marauder", 320/2, 240 * 0.33, 1);
+    display_obj.tft.drawCentreString("JustCallMeKoko", 320/2, 240 * 0.5, 1);
+    display_obj.tft.drawCentreString(display_obj.version_number, 320/2, 240 * 0.66, 1);
   #endif
 
 
