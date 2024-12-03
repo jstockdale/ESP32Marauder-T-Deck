@@ -293,7 +293,7 @@ void setup()
       #ifdef HAS_SCREEN
         display_obj.tft.setTextColor(TFT_GREEN, TFT_BLACK);
         display_obj.tft.println(F(text_table0[3]));
-        display_obj.tft.drawXBitmap(320/2 - 24,
+        display_obj.tft.drawXBitmap(320/2 - 36,
                       240*.85,
                       menu_icons[STATUS_BAT],
                       16,
@@ -301,7 +301,7 @@ void setup()
                       TFT_BLACK,
                       TFT_GREEN);
         //display_obj.tft.drawString("BAT", 0, 0, 1);
-        display_obj.tft.drawCentreString("SD", 320/2 - 24, 240 * 0.90, 1);
+        display_obj.tft.drawCentreString("SD", 320/2 - 36, 240 * 0.90, 1);
         display_obj.tft.setTextColor(TFT_CYAN, TFT_BLACK);
       #endif
     } else {
@@ -309,15 +309,15 @@ void setup()
       #ifdef HAS_SCREEN
         display_obj.tft.setTextColor(TFT_RED, TFT_BLACK);
         display_obj.tft.println(F(text_table0[4]));
-        display_obj.tft.drawXBitmap(320/2 - 24,
+        display_obj.tft.drawXBitmap(320/2 - 36,
                       240*.85,
-                      menu_icons[STATUS_BAT],
+                      menu_icons[STATUS_SD],
                       16,
                       16,
                       TFT_BLACK,
                       TFT_GREEN);
         //display_obj.tft.drawString("BAT", 0, 0, 1);
-        display_obj.tft.drawCentreString("SD", 320/2 - 24, 240 * 0.90, 1);
+        display_obj.tft.drawCentreString("SD", 320/2 - 36, 240 * 0.90, 1);
         display_obj.tft.setTextColor(TFT_CYAN, TFT_BLACK);
       #endif
     }
@@ -348,7 +348,7 @@ void setup()
 
   //Serial.println(F("Battery Done"));
   display_obj.tft.setTextColor(TFT_GREEN, TFT_BLACK);
-  display_obj.tft.drawXBitmap(320/2,
+  display_obj.tft.drawXBitmap(320/2 - 4,
                       240*.85,
                       menu_icons[STATUS_BAT],
                       16,
@@ -356,7 +356,7 @@ void setup()
                       TFT_BLACK,
                       TFT_GREEN);
   //display_obj.tft.drawString("BAT", 0, 0, 1);
-  display_obj.tft.drawCentreString("BAT", 320/2, 240 * 0.90, 1);
+  display_obj.tft.drawCentreString("BAT", 320/2 - 4, 240 * 0.90, 1);
   display_obj.tft.setTextColor(TFT_CYAN, TFT_BLACK);
 
   // Do some LED stuff
@@ -385,7 +385,7 @@ void setup()
     #ifdef HAS_SCREEN
       if (gps_obj.getGpsModuleStatus()) {
         display_obj.tft.setTextColor(TFT_GREEN, TFT_BLACK);
-        display_obj.tft.drawXBitmap(320/2 + 24,
+        display_obj.tft.drawXBitmap(320/2 + 28,
                     240*.85,
                     menu_icons[STATUS_GPS],
                     16,
@@ -393,13 +393,13 @@ void setup()
                     TFT_BLACK,
                     TFT_GREEN);
         //display_obj.tft.drawString("GPS", 0, 0, 1);
-        display_obj.tft.drawCentreString("GPS", 320/2, 240 * 0.90, 1);
+        display_obj.tft.drawCentreString("GPS", 320/2 + 28, 240 * 0.90, 1);
         display_obj.tft.println("GPS Module connected");
         display_obj.tft.setTextColor(TFT_CYAN, TFT_BLACK);
       }
       else {
         display_obj.tft.setTextColor(TFT_RED, TFT_BLACK);
-        display_obj.tft.drawXBitmap(320/2 + 24,
+        display_obj.tft.drawXBitmap(320/2 + 28,
                     240*.85,
                     menu_icons[STATUS_GPS],
                     16,
@@ -407,7 +407,7 @@ void setup()
                     TFT_BLACK,
                     TFT_RED);
         //display_obj.tft.drawString("GPS", 0, 0, 1);
-        display_obj.tft.drawCentreString("GPS", 320/2, 240 * 0.90, 1);
+        display_obj.tft.drawCentreString("GPS", 320/2 + 28, 240 * 0.90, 1);
         display_obj.tft.println("GPS Module failed to connect");
         display_obj.tft.setTextColor(TFT_CYAN, TFT_BLACK);
       }
@@ -419,7 +419,7 @@ void setup()
   
     display_obj.tft.setTextColor(TFT_WHITE, TFT_BLACK);
   
-    delay(500);
+    delay(1000);
   #endif
 
   #ifdef HAS_SCREEN
