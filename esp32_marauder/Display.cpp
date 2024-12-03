@@ -32,7 +32,9 @@ void Display::RunSetup()
     tft.setRotation(1);
   #endif
 
-  tft.setRotation(1);
+  #ifdef T_DECK
+    tft.setRotation(1);
+  #endif
 
   tft.setCursor(0, 0);
 
@@ -396,10 +398,22 @@ int Display::scroll_line(uint32_t color) {
 
 // Function to setup hardware scroll for TFT screen
 void Display::setupScrollArea(uint16_t tfa, uint16_t bfa) {
+  #ifdef T_DECK
+    return;
+  #endif
   //Serial.println(F("setupScrollArea()"));
   //Serial.println("   tfa: " + (String)tfa);
   //Serial.println("   bfa: " + (String)bfa);
   //Serial.println("yStart: " + (String)this->yStart);
+  #ifdef HAS_ILI9341
+    tft.writecommand(ILI9341_VSCRDEF); // Vertical scroll definition
+    tft.writedata(tfa >> 8);           // Top Fixed Area line count
+    tft.writedata(tfa);
+    tft.writedata((YMAX-tfa-bfa)>>8);  // Vertical Scrolling Area line count
+    tft.writedata(YMAX-tfa-bfa);
+    tft.writedata(bfa >> 8);           // Bottom Fixed Area line count
+    tft.writedata(bfa);
+  #endif
   #ifdef HAS_ST7789
     tft.writecommand(ST7789_VSCRDEF); // Vertical scroll definition
     tft.writedata(tfa >> 8);           // Top Fixed Area line count
@@ -413,6 +427,14 @@ void Display::setupScrollArea(uint16_t tfa, uint16_t bfa) {
 
 
 void Display::scrollAddress(uint16_t vsp) {
+  #ifdef T_DECK
+    return;
+  #endif
+  #ifdef HAS_ILI9341
+    tft.writecommand(ILI9341_VSCRSADD); // Vertical scrolling pointer
+    tft.writedata(vsp>>8);
+    tft.writedata(vsp);
+  #endif
   #ifdef HAS_ST7789
     tft.writecommand(ST7789_VSCRSADD); // Vertical scrolling pointer
     tft.writedata(vsp>>8);

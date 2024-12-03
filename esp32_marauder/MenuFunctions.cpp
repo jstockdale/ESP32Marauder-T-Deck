@@ -845,7 +845,7 @@ void MenuFunctions::main(uint32_t currentTime)
   #endif
 
   #ifdef HAS_BUTTONS
-    #if !(defined(MARAUDER_V6) || defined(MARAUDER_V6_1))
+    #if !(defined(MARAUDER_V6) || defined(MARAUDER_V6_1) || defined(LILYGO_T_DECK))
       #ifndef MARAUDER_M5STICKC
         if (u_btn.justPressed()){
           if ((wifi_scan_obj.currentScanMode == WIFI_SCAN_OFF) ||
@@ -1678,7 +1678,7 @@ void MenuFunctions::RunSetup()
     this->addNodes(&wifiGeneralMenu, "Select EP HTML File", TFT_CYAN, NULL, KEYBOARD_ICO, [this](){
       this->changeMenu(&htmlMenu);
       #if (defined(HAS_BUTTONS) && defined(HAS_SD)) 
-        #if !(defined(MARAUDER_V6) || defined(MARAUDER_V6_1))
+        #if !(defined(MARAUDER_V6) || defined(MARAUDER_V6_1) || defined(LILYGO_T_DECK))
           while(true) {
             if (d_btn.justPressed()) {
               if (evil_portal_obj.selected_html_index > 0)
@@ -2115,7 +2115,7 @@ void MenuFunctions::RunSetup()
         #ifndef HAS_ST7789
           #ifdef HAS_BUTTONS
             this->changeMenu(&sdDeleteMenu);
-            #if !(defined(MARAUDER_V6) || defined(MARAUDER_V6_1))
+            #if !(defined(MARAUDER_V6) || defined(MARAUDER_V6_1) || defined(LILYGO_T_DECK))
 
               bool deleting = true;
 
@@ -2320,7 +2320,7 @@ void MenuFunctions::RunSetup()
 
     // Button loop until hold center button
     #ifdef HAS_BUTTONS
-      #if !(defined(MARAUDER_V6) || defined(MARAUDER_V6_1))
+      #if !(defined(MARAUDER_V6) || defined(MARAUDER_V6_1) || defined(LILYGO_T_DECK))
         while(true) {
           // Cycle char previous
           #ifdef HAS_L
