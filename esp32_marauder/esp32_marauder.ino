@@ -262,45 +262,65 @@ void setup()
 
     //display_obj.clearScreen();
   
-    //display_obj.tft.setTextColor(TFT_CYAN, TFT_BLACK);
+    display_obj.tft.setTextColor(TFT_CYAN, TFT_BLACK);
   
     //display_obj.tft.println(text_table0[0]);
   
     //delay(2000);
   
-    //display_obj.tft.println("Marauder " + display_obj.version_number + "\n");
+    display_obj.tft.println("Marauder " + display_obj.version_number + "\n");
   
-    //display_obj.tft.println(text_table0[1]);
+    display_obj.tft.println(text_table0[1]);
   #endif
 
   settings_obj.begin();
 
-  wifi_scan_obj.RunSetup();
+  #ifdef HAS_SCREEN
+    display_obj.tft.setTextColor(TFT_GREEN, TFT_BLACK);
+    display_obj.tft.drawCentreString("Initializing...", 320/2, 240 * 0.80, 1);
+    display_obj.tft.setTextColor(TFT_CYAN, TFT_BLACK);
+  #endif
 
-  //#ifdef HAS_SCREEN
-  //  display_obj.tft.println(F(text_table0[2]));
-  //#endif
+  wifi_scan_obj.RunSetup();
+  #ifdef HAS_SCREEN
+    display_obj.tft.println(F(text_table0[2]));
+  #endif
 
   buffer_obj = Buffer();
   #if defined(HAS_SD)
     // Do some SD stuff
     if(sd_obj.initSD()) {
       #ifdef HAS_SCREEN
-        //display_obj.tft.println(F(text_table0[3]));
+        display_obj.tft.setTextColor(TFT_GREEN, TFT_BLACK);
+        display_obj.tft.println(F(text_table0[3]));
+        display_obj.tft.drawXBitmap(320/2 - 24,
+                      240*.85,
+                      menu_icons[STATUS_BAT],
+                      16,
+                      16,
+                      TFT_BLACK,
+                      TFT_GREEN);
+        //display_obj.tft.drawString("BAT", 0, 0, 1);
+        display_obj.tft.drawCentreString("SD", 320/2 - 24, 240 * 0.90, 1);
+        display_obj.tft.setTextColor(TFT_CYAN, TFT_BLACK);
       #endif
     } else {
       Serial.println(F("SD Card NOT Supported"));
       #ifdef HAS_SCREEN
-        //display_obj.tft.setTextColor(TFT_RED, TFT_BLACK);
-        //display_obj.tft.println(F(text_table0[4]));
-        //display_obj.tft.setTextColor(TFT_CYAN, TFT_BLACK);
+        display_obj.tft.setTextColor(TFT_RED, TFT_BLACK);
+        display_obj.tft.println(F(text_table0[4]));
+        display_obj.tft.drawXBitmap(320/2 - 24,
+                      240*.85,
+                      menu_icons[STATUS_BAT],
+                      16,
+                      16,
+                      TFT_BLACK,
+                      TFT_GREEN);
+        //display_obj.tft.drawString("BAT", 0, 0, 1);
+        display_obj.tft.drawCentreString("SD", 320/2 - 24, 240 * 0.90, 1);
+        display_obj.tft.setTextColor(TFT_CYAN, TFT_BLACK);
       #endif
     }
-  #endif
-
-  #ifdef HAS_SCREEN
-    display_obj.tft.setTextColor(TFT_GREEN, TFT_BLACK);
-    display_obj.tft.drawCentreString("Initializing...", TFT_WIDTH/2, TFT_HEIGHT * 0.82, 1);
   #endif
 
   Serial.println(F("Initializing..."));
@@ -312,22 +332,36 @@ void setup()
   #endif
   
   #ifdef HAS_SCREEN
-    //display_obj.tft.println(F(text_table0[5]));
+    display_obj.tft.println(F(text_table0[5]));
   #endif
 
-  #ifdef HAS_SCREEN
-    //display_obj.tft.println(F(text_table0[6]));
-  #endif
+//  #ifdef HAS_SCREEN
+//    display_obj.tft.println(F(text_table0[6]));
+//  #endif
 
   #ifdef HAS_BATTERY
     battery_obj.battery_level = battery_obj.getBatteryLevel();
+    display_obj.tft.setTextColor(TFT_GREEN, TFT_BLACK);
+    display_obj.tft.println("Battery level: " + String(battery_obj.battery_level));
+    display_obj.tft.setTextColor(TFT_CYAN, TFT_BLACK);
   #endif
 
-  Serial.println(F("Battery Done"));
+  //Serial.println(F("Battery Done"));
+  display_obj.tft.setTextColor(TFT_GREEN, TFT_BLACK);
+  display_obj.tft.drawXBitmap(320/2,
+                      240*.85,
+                      menu_icons[STATUS_BAT],
+                      16,
+                      16,
+                      TFT_BLACK,
+                      TFT_GREEN);
+  //display_obj.tft.drawString("BAT", 0, 0, 1);
+  display_obj.tft.drawCentreString("BAT", 320/2, 240 * 0.90, 1);
+  display_obj.tft.setTextColor(TFT_CYAN, TFT_BLACK);
 
   // Do some LED stuff
   #ifdef T_DECK
-    Serial.println(F("LED noop for T-Deck"));
+    Serial.println(F("LED NOOP for T-Deck"));
   #elif MARAUDER_FLIPPER
     flipper_led.RunSetup();
   #elif defined(XIAO_ESP32_S3)
@@ -337,30 +371,55 @@ void setup()
   #else
     led_obj.RunSetup();
   #endif
-
-  #ifdef HAS_SCREEN
-    //display_obj.tft.println(F(text_table0[7]));
-
-    //delay(500);
-  #endif
+//
+//  #ifdef HAS_SCREEN
+//    display_obj.tft.println(F(text_table0[7]));
+//
+//    //delay(500);
+//  #endif
 
   #ifdef HAS_GPS
     Serial.println(F("Initializing GPS"));
     gps_obj.begin();
-    //#ifdef HAS_SCREEN
-      //if (gps_obj.getGpsModuleStatus())
-        //display_obj.tft.println("GPS Module connected");
-      //else
-        //display_obj.tft.println("GPS Module NOT connected");
-    //#endif
+    
+    #ifdef HAS_SCREEN
+      if (gps_obj.getGpsModuleStatus()) {
+        display_obj.tft.setTextColor(TFT_GREEN, TFT_BLACK);
+        display_obj.tft.drawXBitmap(320/2 + 24,
+                    240*.85,
+                    menu_icons[STATUS_GPS],
+                    16,
+                    16,
+                    TFT_BLACK,
+                    TFT_GREEN);
+        //display_obj.tft.drawString("GPS", 0, 0, 1);
+        display_obj.tft.drawCentreString("GPS", 320/2, 240 * 0.90, 1);
+        display_obj.tft.println("GPS Module connected");
+        display_obj.tft.setTextColor(TFT_CYAN, TFT_BLACK);
+      }
+      else {
+        display_obj.tft.setTextColor(TFT_RED, TFT_BLACK);
+        display_obj.tft.drawXBitmap(320/2 + 24,
+                    240*.85,
+                    menu_icons[STATUS_GPS],
+                    16,
+                    16,
+                    TFT_BLACK,
+                    TFT_RED);
+        //display_obj.tft.drawString("GPS", 0, 0, 1);
+        display_obj.tft.drawCentreString("GPS", 320/2, 240 * 0.90, 1);
+        display_obj.tft.println("GPS Module failed to connect");
+        display_obj.tft.setTextColor(TFT_CYAN, TFT_BLACK);
+      }
+    #endif
   #endif
 
   #ifdef HAS_SCREEN
-    //display_obj.tft.println(F(text_table0[8]));
+    display_obj.tft.println(F(text_table0[8]));
   
     display_obj.tft.setTextColor(TFT_WHITE, TFT_BLACK);
   
-    //delay(2000);
+    delay(500);
   #endif
 
   #ifdef HAS_SCREEN
@@ -369,6 +428,11 @@ void setup()
   
   Serial.println(F("CLI Ready"));
   cli_obj.RunSetup();
+
+//  display_obj.tft.setTextColor(TFT_GREEN, TFT_BLACK);
+//  display_obj.tft.drawCentreString("MESS WITH THE BEST", 320/2, 240 * 0.90, 1);
+//  display_obj.tft.drawCentreString("DIE LIKE THE REST", 320/2, 240 * 0.95, 1);
+//  display_obj.tft.setTextColor(TFT_WHITE, TFT_BLACK);
 }
 
 

@@ -1002,8 +1002,8 @@ void MenuFunctions::battery(bool initial)
   else the_color = TFT_GREEN;
 
   display_obj.tft.setTextColor(the_color, STATUSBAR_COLOR);
-  display_obj.tft.fillRect(240, 0, 50, STATUS_BAR_WIDTH, STATUSBAR_COLOR);
-  display_obj.tft.drawXBitmap(240,
+  display_obj.tft.fillRect(267, 0, 50, STATUS_BAR_WIDTH, STATUSBAR_COLOR);
+  display_obj.tft.drawXBitmap(267,
                               0,
                               menu_icons[STATUS_BAT],
                               16,
@@ -1011,10 +1011,10 @@ void MenuFunctions::battery(bool initial)
                               STATUSBAR_COLOR,
                               the_color);
   if(battery_obj.battery_level > 100) {
-    display_obj.tft.drawString("CHG", 256, 0, 2);
+    display_obj.tft.drawString("CHG", 283, 0, 2);
   }
   else {
-    display_obj.tft.drawString( String(battery_obj.battery_level) + "%", 256, 0, 2);
+    display_obj.tft.drawString( String(battery_obj.battery_level) + "%", 283, 0, 2);
   }
   #endif
 }
@@ -1128,8 +1128,8 @@ void MenuFunctions::updateStatusBar()
     else
       the_color = TFT_RED;
 
-    #ifdef H
-      display_obj.tft.drawXBitmap(170,
+    #ifdef HAS_SCREEN
+      display_obj.tft.drawXBitmap(224,
                                   0,
                                   menu_icons[STATUS_SD],
                                   16,
@@ -1187,10 +1187,10 @@ void MenuFunctions::drawStatusBar()
   #if defined(MARAUDER_MINI) || defined(MARAUDER_M5STICKC) || defined(MARAUDER_REV_FEATHER)
     display_obj.tft.fillRect(43, 0, TFT_WIDTH * 0.21, STATUS_BAR_WIDTH, STATUSBAR_COLOR);
   #else
-    display_obj.tft.fillRect(50, 0, TFT_WIDTH * 0.21, STATUS_BAR_WIDTH, STATUSBAR_COLOR);
+    display_obj.tft.fillRect(60, 0, TFT_WIDTH * 0.21, STATUS_BAR_WIDTH, STATUSBAR_COLOR);
   #endif
   #ifdef HAS_ST7789
-    display_obj.tft.drawString("CH: " + (String)wifi_scan_obj.set_channel, 50, 0, 2);
+    display_obj.tft.drawString("CH: " + (String)wifi_scan_obj.set_channel, 60, 0, 2);
   #endif
 
   #if defined(MARAUDER_MINI) || defined(MARAUDER_M5STICKC) || defined(MARAUDER_REV_FEATHER)
@@ -1200,9 +1200,9 @@ void MenuFunctions::drawStatusBar()
   // RAM Stuff
   wifi_scan_obj.freeRAM();
   wifi_scan_obj.old_free_ram = wifi_scan_obj.free_ram;
-  display_obj.tft.fillRect(100, 0, 60, STATUS_BAR_WIDTH, STATUSBAR_COLOR);
+  display_obj.tft.fillRect(124, 0, 60, STATUS_BAR_WIDTH, STATUSBAR_COLOR);
   #ifdef HAS_ST7789
-    display_obj.tft.drawString((String)wifi_scan_obj.free_ram + "B", 100, 0, 2);
+    display_obj.tft.drawString((String)wifi_scan_obj.free_ram + "B", 124, 0, 2);
   #endif
 
   #if defined(MARAUDER_MINI) || defined(MARAUDER_M5STICKC) || defined(MARAUDER_REV_FEATHER)
@@ -1237,7 +1237,7 @@ void MenuFunctions::drawStatusBar()
   
 
     #ifdef HAS_ST7789
-      display_obj.tft.drawXBitmap(170,
+      display_obj.tft.drawXBitmap(224,
                                   0,
                                   menu_icons[STATUS_SD],
                                   16,
