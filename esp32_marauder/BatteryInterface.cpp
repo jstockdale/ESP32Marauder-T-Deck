@@ -41,5 +41,16 @@ int8_t BatteryInterface::getBatteryLevel() {
   //    case 0x00: return 100;
   //    default: return 0;
   //  }
-  return bat_val*100/2500;
+  if (bat_val > 2600) {
+    return 123;
+  }
+  else if (bat_val >= 2500) {
+    return 100;
+  }
+  else if (bat_val > 1600) {
+    return (bat_val - 1600)/(2500-1600);
+  }
+  else {
+    return 0;
+  }
 }
