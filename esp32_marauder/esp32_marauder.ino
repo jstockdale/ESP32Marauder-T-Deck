@@ -428,8 +428,8 @@ void loop()
   #ifdef HAS_SCREEN
     display_obj.tft.setTextColor(TFT_GREEN, TFT_BLACK);
     display_obj.tft.drawString(String(currentTime), 272, TFT_HEIGHT * 0.05, 1);
-    display_obj.tft.drawString(String(battery_obj.battery_level), 272, TFT_HEIGHT * 0.1, 1);
-    display_obj.tft.drawString(String(battery_obj.battery_value), 272, TFT_HEIGHT * 0.15, 1);
+    //display_obj.tft.drawString(String(battery_obj.battery_level), 272, TFT_HEIGHT * 0.1, 1);
+    //display_obj.tft.drawString(String(battery_obj.battery_value), 272, TFT_HEIGHT * 0.15, 1);
   #endif
 
   #ifdef SCREEN_BUFFER
