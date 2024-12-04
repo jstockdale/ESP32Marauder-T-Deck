@@ -1134,6 +1134,8 @@ void MenuFunctions::updateStatusBar()
                                     16,
                                     STATUSBAR_COLOR,
                                     TFT_RED);
+      } else {
+        display_obj.tft.fillRect(190, 0, 16, STATUS_BAR_WIDTH, STATUSBAR_COLOR);
       }
     #endif
   #endif
