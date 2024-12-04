@@ -4607,7 +4607,7 @@ void WiFiScan::activeEapolSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t
         Serial.print(" Y: ");
         Serial.println(t_y[0]);
         #ifdef T_DECK
-          // throw away any buffered touches
+          // throw away touches
           for (int i = 0; i < THROW_AWAY_TOUCH_COUNT; i++) {
             touch.getPoint(tmp_x, tmp_y, touch.getSupportTouchPoint());
           }
@@ -4768,7 +4768,7 @@ void WiFiScan::activeEapolSnifferCallback(void* buf, wifi_promiscuous_pkt_type_t
         Serial.print(" Y: ");
         Serial.println(t_y[0]);
         #ifdef T_DECK
-          // throw away any buffered touches
+          // throw away touches
           for (int i = 0; i < THROW_AWAY_TOUCH_COUNT; i++) {
             touch.getPoint(tmp_x, tmp_y, touch.getSupportTouchPoint());
           }

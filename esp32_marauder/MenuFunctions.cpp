@@ -26,7 +26,7 @@ MenuFunctions::MenuFunctions()
       uint8_t result = touch.isPressed() && touch.getPoint(x, y, touch.getSupportTouchPoint());
       #ifdef T_DECK
         int16_t tmp_x[5] = {0,0,0,0,0}, tmp_y[5] = {0,0,0,0,0}; // To throw away touch coordinates
-        // throw away any buffered touches
+        // throw away touches
         for (int i = 0; i < THROW_AWAY_TOUCH_COUNT; i++) {
           touch.isPressed() && touch.getPoint(tmp_x, tmp_y, touch.getSupportTouchPoint());
         }
@@ -73,7 +73,7 @@ MenuFunctions::MenuFunctions()
     touch.getPoint(touchX, touchY, touch.getSupportTouchPoint());
 
     #ifdef T_DECK
-      // throw away any buffered touches
+      // throw away touches
       for (int i = 0; i < THROW_AWAY_TOUCH_COUNT; i++) {
         touch.getPoint(tmpX, tmpY, touch.getSupportTouchPoint());
       }
