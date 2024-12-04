@@ -1093,10 +1093,10 @@ void MenuFunctions::updateStatusBar()
     #if defined(MARAUDER_MINI) || defined(MARAUDER_M5STICKC) || defined(MARAUDER_REV_FEATHER)
       display_obj.tft.fillRect(43, 0, TFT_WIDTH * 0.21, STATUS_BAR_WIDTH, STATUSBAR_COLOR);
     #else
-      display_obj.tft.fillRect(50, 0, TFT_WIDTH * 0.21, STATUS_BAR_WIDTH, STATUSBAR_COLOR);
+      display_obj.tft.fillRect(60, 0, TFT_WIDTH * 0.21, STATUS_BAR_WIDTH, STATUSBAR_COLOR);
     #endif
     #ifdef HAS_ST7789
-      display_obj.tft.drawString("CH: " + (String)wifi_scan_obj.set_channel, 50, 0, 2);
+      display_obj.tft.drawString("CH: " + (String)wifi_scan_obj.set_channel, 60, 0, 2);
     #endif
 
     #if defined(MARAUDER_MINI) || defined(MARAUDER_M5STICKC) || defined(MARAUDER_REV_FEATHER)
@@ -1108,9 +1108,9 @@ void MenuFunctions::updateStatusBar()
   wifi_scan_obj.freeRAM();
   if ((wifi_scan_obj.free_ram != wifi_scan_obj.old_free_ram) || (status_changed)) {
     wifi_scan_obj.old_free_ram = wifi_scan_obj.free_ram;
-    display_obj.tft.fillRect(100, 0, 60, STATUS_BAR_WIDTH, STATUSBAR_COLOR);
+    display_obj.tft.fillRect(124, 0, 60, STATUS_BAR_WIDTH, STATUSBAR_COLOR);
     #ifdef HAS_ST7789
-      display_obj.tft.drawString((String)wifi_scan_obj.free_ram + "B", 100, 0, 2);
+      display_obj.tft.drawString((String)wifi_scan_obj.free_ram + "B", 124, 0, 2);
     #endif
 
     #if defined(MARAUDER_MINI) || defined(MARAUDER_M5STICKC) || defined(MARAUDER_REV_FEATHER)
@@ -1241,6 +1241,8 @@ void MenuFunctions::drawStatusBar()
                                     16,
                                     STATUSBAR_COLOR,
                                     TFT_RED);
+      } else {
+        display_obj.tft.fillRect(190, 0, 16, STATUS_BAR_WIDTH, STATUSBAR_COLOR);
       }
     #endif
   #endif

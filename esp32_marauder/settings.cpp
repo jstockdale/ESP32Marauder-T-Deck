@@ -288,6 +288,18 @@ bool Settings::createDefaultSettings(fs::FS &fs) {
   jsonBuffer["Settings"][3]["range"]["min"] = false;
   jsonBuffer["Settings"][3]["range"]["max"] = true;
 
+  jsonBuffer["Settings"][4]["name"] = "ChannelHop";
+  jsonBuffer["Settings"][4]["type"] = "bool";
+  jsonBuffer["Settings"][4]["value"] = true;
+  jsonBuffer["Settings"][4]["range"]["min"] = false;
+  jsonBuffer["Settings"][4]["range"]["max"] = true;
+
+//  jsonBuffer["Settings"][5]["name"] = "ChannelHopDelayMillis";
+//  jsonBuffer["Settings"][5]["type"] = "int";
+//  jsonBuffer["Settings"][5]["value"] = 500;
+//  jsonBuffer["Settings"][5]["range"]["min"] = 100;
+//  jsonBuffer["Settings"][5]["range"]["max"] = 5000;
+
   //jsonBuffer.printTo(settingsFile);
   if (serializeJson(jsonBuffer, settingsFile) == 0) {
     Serial.println(F("Failed to write to file"));
