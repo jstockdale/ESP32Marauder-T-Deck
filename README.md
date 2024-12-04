@@ -37,12 +37,8 @@ This is an extremely early work in progress. It's not cleaned up or stable yet. 
 [X] Serial and CLI both work
 [X] ST7899 Screen works
 [X] GT911 Touch library
-    ***BUGGY*** TODO(@jstockdale): Fix multiple touch registrations from one press
-    Note: Mitigate touchscreen bugs by minimizing the area you touch.
-    Use a small touchscreen pen if necessary.
 [X] L76K GPS works
-   If it stops working, reset your device.
-   If that doesn't work, power off and back on.
+   If it stops working / hangs during initialization, reset your device.
 [X] Battery level works
 [X] SD Card works
 --
