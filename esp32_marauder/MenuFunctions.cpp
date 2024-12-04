@@ -22,10 +22,19 @@ MenuFunctions::MenuFunctions()
 
 #ifdef HAS_ST7789
   uint8_t MenuFunctions::updateTouch(int16_t *x, int16_t *y, uint16_t threshold) {
-    if (!display_obj.headless_mode)
-      return touch.isPressed() && touch.getPoint(x, y, touch.getSupportTouchPoint());
-    else
+    if (!display_obj.headless_mode) {
+      uint8_t result = touch.isPressed() && touch.getPoint(x, y, touch.getSupportTouchPoint());
+      #ifdef T_DECK
+        int16_t tmp_x[5] = {0,0,0,0,0}, tmp_y[5] = {0,0,0,0,0}; // To throw away touch coordinates
+        // throw away any buffered touches
+        for (int i = 0; i < THROW_AWAY_TOUCH_COUNT; i++) {
+          touch.isPressed() && touch.getPoint(tmp_x, tmp_y, touch.getSupportTouchPoint());
+        }
+      #endif
+      return result;
+    } else {
       return !display_obj.headless_mode;
+    }
   }
 
   void MenuFunctions::lv_tick_handler()
@@ -57,10 +66,18 @@ MenuFunctions::MenuFunctions()
   {
     extern Display display_obj;
     
-    int16_t touchX[5], touchY[5];
+    int16_t touchX[5] = {0,0,0,0,0}, touchY[5] = {0,0,0,0,0};
+    int16_t tmpX[5] = {0,0,0,0,0}, tmpY[5] = {0,0,0,0,0};
   
     bool touched = touch.isPressed();
     touch.getPoint(touchX, touchY, touch.getSupportTouchPoint());
+
+    #ifdef T_DECK
+      // throw away any buffered touches
+      for (int i = 0; i < THROW_AWAY_TOUCH_COUNT; i++) {
+        touch.getPoint(tmpX, tmpY, touch.getSupportTouchPoint());
+      }
+    #endif
   
     if(!touched)
     {
