@@ -742,23 +742,18 @@
       #define T_DECK
 
       #define THROW_AWAY_TOUCH_COUNT 31
-      
-      #define SCREEN_CHAR_WIDTH 40
+
       #define HAS_ST7789
+      #define SCREEN_CHAR_WIDTH 40
 
       #define SCREEN_BUFFER
-
       #define MAX_SCREEN_BUFFER 16
     
       #define BANNER_TEXT_SIZE 2
 
-      //#ifndef TFT_WIDTH
-        #define TFT_WIDTH 320
-      //#endif
-
-      //#ifndef TFT_HEIGHT
-        #define TFT_HEIGHT 240
-      //#endif
+      #define TFT_WIDTH 320
+      #define TFT_HEIGHT 240
+      #define TFT_BL 42
 
       #define TFT_DIY
 

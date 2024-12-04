@@ -1,6 +1,7 @@
 #include "MenuFunctions.h"
 #include "lang_var.h"
 //#include "icons.h"
+#include "configs.h"
 #include "TouchDrvGT911.hpp"
 
 TouchDrvGT911 touch;
@@ -1473,6 +1474,18 @@ void MenuFunctions::RunSetup()
   this->addNodes(&mainMenu, text_table1[9], TFT_BLUE, NULL, DEVICE, [this]() {
     this->changeMenu(&deviceMenu);
   });
+    this->addNodes(&mainMenu, text_table1[63], TFT_PURPLE, NULL, HEADLESS, []() {
+      #ifdef HAS_SCREEN
+        #ifdef MARAUDER_MINI
+          digitalWrite(TFT_BL, HIGH);
+        #endif
+    
+        #ifndef MARAUDER_MINI
+          digitalWrite(TFT_BL, LOW);
+        #endif
+      #endif
+      display_obj.headless_mode = true;
+  });
   this->addNodes(&mainMenu, text_table1[30], TFT_LIGHTGREY, NULL, REBOOT, []() {
     ESP.restart();
   });
@@ -2124,7 +2137,7 @@ void MenuFunctions::RunSetup()
     this->changeMenu(&infoMenu);
     wifi_scan_obj.RunInfo();
   });
-  this->addNodes(&deviceMenu, text08, TFT_NAVY, NULL, KEYBOARD_ICO, [this]() {
+  this->addNodes(&deviceMenu, text08, TFT_BLUE, NULL, KEYBOARD_ICO, [this]() {
     this->changeMenu(&settingsMenu);
   });
 
