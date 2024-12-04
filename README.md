@@ -50,4 +50,4 @@ I recommend using the excellent [M5Launcher](https://github.com/bmorcelli/M5Stic
 
 Please direct any feedback to the Issues page. This is alpha, pre-release software. And comes with no warranty of fitness or guarantees of any time. Use at your own risk. Thanks! :-)
 
-Latest pre-release development build: [prealpha-ak08](https://github.com/jstockdale/ESP32Marauder-T-Deck/raw/c4ae23ee15ea0c7201d4796bb6674752f8683c7f/Release%20Bins/esp32_marauder_v1_0_0_20241203_tdeck_pre_alpha_ak08.bin)
+Latest pre-release development build: [pre_alpha_ak08](https://github.com/jstockdale/ESP32Marauder-T-Deck/raw/c4ae23ee15ea0c7201d4796bb6674752f8683c7f/Release%20Bins/esp32_marauder_v1_0_0_20241203_tdeck_pre_alpha_ak08.bin)
