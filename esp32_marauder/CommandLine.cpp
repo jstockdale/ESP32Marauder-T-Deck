@@ -25,7 +25,7 @@ String CommandLine::getSerialInput() {
 
   if (Serial.available() > 0 && serial_buffer_idx < 255) {
     bytes_available = Serial.available();
-    Serial.println("Should have bytes available: " + bytes_available);
+    //Serial.println("Should have bytes available: " + bytes_available);
     int bytes_to_read = bytes_available < (254 - serial_buffer_idx) ? bytes_available : (254 - serial_buffer_idx);
     bytes_received = Serial.readBytes(&serial_buffer[serial_buffer_idx], bytes_to_read);
     serial_buffer_idx += bytes_received;
