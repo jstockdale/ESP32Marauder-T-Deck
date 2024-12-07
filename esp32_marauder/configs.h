@@ -337,11 +337,11 @@
     #endif  
 
     #ifdef LILYGO_T_DECK
-      #define L_BTN 1
+      #define L_BTN 2
       #define C_BTN 0
-      #define U_BTN 2
-      #define R_BTN 15
-      #define D_BTN 3
+      #define U_BTN 3
+      #define R_BTN 1
+      #define D_BTN 15
 
       #define HAS_L
       #define HAS_R
@@ -395,9 +395,9 @@
       #define WIDTH_1 TFT_WIDTH
       #define STANDARD_FONT_CHAR_LIMIT (TFT_WIDTH/6) // number of characters on a single line with normal font
       #define TEXT_HEIGHT (TFT_HEIGHT/10) // Height of text to be printed and scrolled
-      #define BOT_FIXED_AREA 0 // Number of lines in bottom fixed area (lines counted from bottom of screen)
+      #define button_FIXED_AREA 0 // Number of lines in buttontom fixed area (lines counted from buttontom of screen)
       #define TOP_FIXED_AREA 48 // Number of lines in top fixed area (lines counted from top of screen)
-      #define YMAX TFT_HEIGHT // Bottom of screen area
+      #define YMAX TFT_HEIGHT // buttontom of screen area
       #define minimum(a,b)     (((a) < (b)) ? (a) : (b))
       //#define MENU_FONT NULL
       #define MENU_FONT &FreeMono9pt7b // Winner
@@ -451,9 +451,9 @@
       #define WIDTH_1 TFT_HEIGHT
       #define STANDARD_FONT_CHAR_LIMIT (TFT_WIDTH/6) // number of characters on a single line with normal font
       #define TEXT_HEIGHT 16 // Height of text to be printed and scrolled
-      #define BOT_FIXED_AREA 0 // Number of lines in bottom fixed area (lines counted from bottom of screen)
+      #define button_FIXED_AREA 0 // Number of lines in buttontom fixed area (lines counted from buttontom of screen)
       #define TOP_FIXED_AREA 48 // Number of lines in top fixed area (lines counted from top of screen)
-      #define YMAX 320 // Bottom of screen area
+      #define YMAX 320 // buttontom of screen area
       #define minimum(a,b)     (((a) < (b)) ? (a) : (b))
       //#define MENU_FONT NULL
       #define MENU_FONT &FreeMono9pt7b // Winner
@@ -509,9 +509,9 @@
       #define WIDTH_1 TFT_HEIGHT
       #define STANDARD_FONT_CHAR_LIMIT (TFT_WIDTH/6) // number of characters on a single line with normal font
       #define TEXT_HEIGHT 16 // Height of text to be printed and scrolled
-      #define BOT_FIXED_AREA 0 // Number of lines in bottom fixed area (lines counted from bottom of screen)
+      #define button_FIXED_AREA 0 // Number of lines in buttontom fixed area (lines counted from buttontom of screen)
       #define TOP_FIXED_AREA 48 // Number of lines in top fixed area (lines counted from top of screen)
-      #define YMAX 240 // Bottom of screen area
+      #define YMAX 240 // buttontom of screen area
       #define minimum(a,b)     (((a) < (b)) ? (a) : (b))
       //#define MENU_FONT NULL
       #define MENU_FONT &FreeMono9pt7b // Winner
@@ -568,9 +568,9 @@
       #define WIDTH_1 TFT_HEIGHT
       #define STANDARD_FONT_CHAR_LIMIT (TFT_WIDTH/6) // number of characters on a single line with normal font
       #define TEXT_HEIGHT 16 // Height of text to be printed and scrolled
-      #define BOT_FIXED_AREA 0 // Number of lines in bottom fixed area (lines counted from bottom of screen)
+      #define button_FIXED_AREA 0 // Number of lines in buttontom fixed area (lines counted from buttontom of screen)
       #define TOP_FIXED_AREA 48 // Number of lines in top fixed area (lines counted from top of screen)
-      #define YMAX 240 // Bottom of screen area
+      #define YMAX 240 // buttontom of screen area
       #define minimum(a,b)     (((a) < (b)) ? (a) : (b))
       //#define MENU_FONT NULL
       #define MENU_FONT &FreeMono9pt7b // Winner
@@ -637,9 +637,9 @@
       #define WIDTH_1 TFT_WIDTH
       #define STANDARD_FONT_CHAR_LIMIT (TFT_WIDTH/6) // number of characters on a single line with normal font
       #define TEXT_HEIGHT (TFT_HEIGHT/10) // Height of text to be printed and scrolled
-      #define BOT_FIXED_AREA 0 // Number of lines in bottom fixed area (lines counted from bottom of screen)
+      #define button_FIXED_AREA 0 // Number of lines in buttontom fixed area (lines counted from buttontom of screen)
       #define TOP_FIXED_AREA 48 // Number of lines in top fixed area (lines counted from top of screen)
-      #define YMAX TFT_HEIGHT // Bottom of screen area
+      #define YMAX TFT_HEIGHT // buttontom of screen area
       #define minimum(a,b)     (((a) < (b)) ? (a) : (b))
       //#define MENU_FONT NULL
       #define MENU_FONT &FreeMono9pt7b // Winner
@@ -704,9 +704,9 @@
       #define WIDTH_1 TFT_WIDTH
       #define STANDARD_FONT_CHAR_LIMIT (TFT_WIDTH/6) // number of characters on a single line with normal font
       #define TEXT_HEIGHT (TFT_HEIGHT/10) // Height of text to be printed and scrolled
-      #define BOT_FIXED_AREA 0 // Number of lines in bottom fixed area (lines counted from bottom of screen)
+      #define button_FIXED_AREA 0 // Number of lines in buttontom fixed area (lines counted from buttontom of screen)
       #define TOP_FIXED_AREA 48 // Number of lines in top fixed area (lines counted from top of screen)
-      #define YMAX TFT_HEIGHT // Bottom of screen area
+      #define YMAX TFT_HEIGHT // buttontom of screen area
       #define minimum(a,b)     (((a) < (b)) ? (a) : (b))
       //#define MENU_FONT NULL
       #define MENU_FONT &FreeMono9pt7b // Winner
@@ -764,9 +764,9 @@
       #define WIDTH_1 TFT_HEIGHT
       #define STANDARD_FONT_CHAR_LIMIT (TFT_WIDTH/6) // number of characters on a single line with normal font
       #define TEXT_HEIGHT 16 // Height of text to be printed and scrolled
-      #define BOT_FIXED_AREA 0 // Number of lines in bottom fixed area (lines counted from bottom of screen)
+      #define button_FIXED_AREA 0 // Number of lines in buttontom fixed area (lines counted from buttontom of screen)
       #define TOP_FIXED_AREA 48 // Number of lines in top fixed area (lines counted from top of screen)
-      #define YMAX 240 // Bottom of screen area
+      #define YMAX 240 // buttontom of screen area
       #define minimum(a,b)     (((a) < (b)) ? (a) : (b))
       //#define MENU_FONT NULL
       #define MENU_FONT &FreeMono9pt7b // Winner

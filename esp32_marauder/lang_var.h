@@ -103,7 +103,7 @@ PROGMEM const char text1_59[] = "Station Sniff";
 PROGMEM const char text1_60[] = "Clear Stations";
 PROGMEM const char text1_61[] = "Select Stations";
 PROGMEM const char text1_62[] = "Deauth Targeted";
-PROGMEM const char text1_63[] = "Switch to Headless Mode";
+PROGMEM const char text1_63[] = "Switch to Headless";
 
 
 //SDInterface.cpp texts

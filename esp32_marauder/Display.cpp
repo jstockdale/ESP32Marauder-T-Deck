@@ -108,7 +108,7 @@ void Display::tftDrawGraphObjects(byte x_scale)
   tft.setTextColor(TFT_YELLOW); tft.setTextSize(1); // set parameters for y axis labels
   //tft.setCursor(3, 116); tft.print(midway);  // "0" at center of ya axis
   tft.setCursor(3, 6); tft.print("+"); // "+' at top of y axis
-  tft.setCursor(3, 228); tft.print("0"); // "-" at bottom of y axis
+  tft.setCursor(3, 228); tft.print("0"); // "-" at buttontom of y axis
 }
 
 void Display::tftDrawEapolColorKey()
@@ -343,7 +343,7 @@ void Display::showCenterText(String text, int y)
 void Display::initScrollValues(bool tte)
 {
   //Serial.println(F("initScrollValues()"));
-  yDraw = YMAX - BOT_FIXED_AREA - TEXT_HEIGHT;
+  yDraw = YMAX - button_FIXED_AREA - TEXT_HEIGHT;
 
   xPos = 0;
 
@@ -351,13 +351,13 @@ void Display::initScrollValues(bool tte)
   {
     yStart = TOP_FIXED_AREA;
 
-    yArea = YMAX - TOP_FIXED_AREA - BOT_FIXED_AREA;
+    yArea = YMAX - TOP_FIXED_AREA - button_FIXED_AREA;
   }
   else
   {
     yStart = TOP_FIXED_AREA_2;
 
-    yArea = YMAX - TOP_FIXED_AREA_2 - BOT_FIXED_AREA;
+    yArea = YMAX - TOP_FIXED_AREA_2 - button_FIXED_AREA;
   }
 
   for(uint8_t i = 0; i < 18; i++) blank[i] = 0;
@@ -379,7 +379,7 @@ int Display::scroll_line(uint32_t color) {
     // Change the top of the scroll area
     yStart+=TEXT_HEIGHT;
     // The value must wrap around as the screen memory is a circular buffer
-    if (yStart >= YMAX - BOT_FIXED_AREA) yStart = TOP_FIXED_AREA + (yStart - YMAX + BOT_FIXED_AREA);
+    if (yStart >= YMAX - button_FIXED_AREA) yStart = TOP_FIXED_AREA + (yStart - YMAX + button_FIXED_AREA);
   }
   else
   {
@@ -388,7 +388,7 @@ int Display::scroll_line(uint32_t color) {
     // Change the top of the scroll area
     yStart+=TEXT_HEIGHT;
     // The value must wrap around as the screen memory is a circular buffer
-    if (yStart >= YMAX - BOT_FIXED_AREA) yStart = TOP_FIXED_AREA_2 + (yStart - YMAX + BOT_FIXED_AREA);
+    if (yStart >= YMAX - button_FIXED_AREA) yStart = TOP_FIXED_AREA_2 + (yStart - YMAX + button_FIXED_AREA);
   }
   // Now we can scroll the display
   scrollAddress(yStart);
@@ -411,7 +411,7 @@ void Display::setupScrollArea(uint16_t tfa, uint16_t bfa) {
     tft.writedata(tfa);
     tft.writedata((YMAX-tfa-bfa)>>8);  // Vertical Scrolling Area line count
     tft.writedata(YMAX-tfa-bfa);
-    tft.writedata(bfa >> 8);           // Bottom Fixed Area line count
+    tft.writedata(bfa >> 8);           // buttontom Fixed Area line count
     tft.writedata(bfa);
   #endif
   #ifdef HAS_ST7789
@@ -420,7 +420,7 @@ void Display::setupScrollArea(uint16_t tfa, uint16_t bfa) {
     tft.writedata(tfa);
     tft.writedata((YMAX-tfa-bfa)>>8);  // Vertical Scrolling Area line count
     tft.writedata(YMAX-tfa-bfa);
-    tft.writedata(bfa >> 8);           // Bottom Fixed Area line count
+    tft.writedata(bfa >> 8);           // buttontom Fixed Area line count
     tft.writedata(bfa);
   #endif
 }
@@ -567,7 +567,7 @@ void Display::jpegRender(int xpos, int ypos) {
 
   // Jpeg images are draw as a set of image block (tiles) called Minimum Coding Units (MCUs)
   // Typically these MCUs are 16x16 pixel blocks
-  // Determine the width and height of the right and bottom edge image blocks
+  // Determine the width and height of the right and buttontom edge image blocks
   int32_t min_w = minimum(mcu_w, max_x % mcu_w);
   int32_t min_h = minimum(mcu_h, max_y % mcu_h);
 
@@ -578,7 +578,7 @@ void Display::jpegRender(int xpos, int ypos) {
   // record the current time so we can measure how long it takes to draw an image
   uint32_t drawTime = millis();
 
-  // save the coordinate of the right and bottom edges to assist image cropping
+  // save the coordinate of the right and buttontom edges to assist image cropping
   // to the screen size
   max_x += xpos;
   max_y += ypos;
@@ -597,7 +597,7 @@ void Display::jpegRender(int xpos, int ypos) {
     if (mcu_x + mcu_w <= max_x) win_w = mcu_w;
     else win_w = min_w;
 
-    // check if the image block size needs to be changed for the bottom edge
+    // check if the image block size needs to be changed for the buttontom edge
     if (mcu_y + mcu_h <= max_y) win_h = mcu_h;
     else win_h = min_h;
 

@@ -1385,7 +1385,7 @@ void WiFiScan::RunEvilPortal(uint8_t scan_mode, uint16_t color)
   display_obj.touchToExit();
 #endif
   display_obj.tft.setTextColor(TFT_MAGENTA, TFT_BLACK);
-  display_obj.setupScrollArea(display_obj.TOP_FIXED_AREA_2, BOT_FIXED_AREA);
+  display_obj.setupScrollArea(display_obj.TOP_FIXED_AREA_2, button_FIXED_AREA);
 #endif
   evil_portal_obj.begin(ssids, access_points);
   //if (!evil_portal_obj.begin(ssids, access_points)) {
@@ -1429,7 +1429,7 @@ void WiFiScan::RunAPScan(uint8_t scan_mode, uint16_t color)
   display_obj.touchToExit();
 #endif
   display_obj.tft.setTextColor(TFT_GREEN, TFT_BLACK);
-  display_obj.setupScrollArea(display_obj.TOP_FIXED_AREA_2, BOT_FIXED_AREA);
+  display_obj.setupScrollArea(display_obj.TOP_FIXED_AREA_2, button_FIXED_AREA);
 #endif
 
   delete access_points;
@@ -1646,14 +1646,14 @@ void WiFiScan::RunGPSNmea() {
   display_obj.tft.setTextColor(TFT_GREEN);
 
   // Clean up screen first
-  display_obj.tft.fillRect(0, offset - 6, SCREEN_WIDTH, SCREEN_HEIGHT - (offset - 6), TFT_BLACK);
+  display_obj.tft.fillRect(0, offset - 6, 320, 240 - (offset - 6), TFT_BLACK);
 
 #ifdef GPS_NMEA_SCRNLINES
   int lines = GPS_NMEA_SCRNLINES;
 #else
   int lines = TEXT_HEIGHT;
-  if (lines > ((TFT_HEIGHT - offset - BOT_FIXED_AREA) / 10))
-    lines = (TFT_HEIGHT - offset - BOT_FIXED_AREA) / 10;
+  if (lines > ((TFT_HEIGHT - offset - button_FIXED_AREA) / 10))
+    lines = (TFT_HEIGHT - offset - button_FIXED_AREA) / 10;
 #endif
 
   String text = gps_obj.getText();
@@ -1887,7 +1887,7 @@ void WiFiScan::RunPacketMonitor(uint8_t scan_mode, uint16_t color)
   display_obj.touchToExit();
 #endif
   display_obj.tft.setTextColor(TFT_GREEN, TFT_BLACK);
-  display_obj.setupScrollArea(display_obj.TOP_FIXED_AREA_2, BOT_FIXED_AREA);
+  display_obj.setupScrollArea(display_obj.TOP_FIXED_AREA_2, button_FIXED_AREA);
 #endif
 #endif
 
@@ -1966,7 +1966,7 @@ void WiFiScan::RunEapolScan(uint8_t scan_mode, uint16_t color)
   display_obj.touchToExit();
 #endif
   display_obj.tft.setTextColor(TFT_GREEN, TFT_BLACK);
-  display_obj.setupScrollArea(display_obj.TOP_FIXED_AREA_2, BOT_FIXED_AREA);
+  display_obj.setupScrollArea(display_obj.TOP_FIXED_AREA_2, button_FIXED_AREA);
 #endif
 #endif
 
@@ -2071,7 +2071,7 @@ void WiFiScan::RunPwnScan(uint8_t scan_mode, uint16_t color)
   display_obj.touchToExit();
 #endif
   display_obj.tft.setTextColor(TFT_GREEN, TFT_BLACK);
-  display_obj.setupScrollArea(display_obj.TOP_FIXED_AREA_2, BOT_FIXED_AREA);
+  display_obj.setupScrollArea(display_obj.TOP_FIXED_AREA_2, button_FIXED_AREA);
 #endif
 
   esp_wifi_init(&cfg);
@@ -2302,7 +2302,7 @@ void WiFiScan::RunBeaconScan(uint8_t scan_mode, uint16_t color)
   display_obj.touchToExit();
 #endif
   display_obj.tft.setTextColor(TFT_GREEN, TFT_BLACK);
-  display_obj.setupScrollArea(display_obj.TOP_FIXED_AREA_2, BOT_FIXED_AREA);
+  display_obj.setupScrollArea(display_obj.TOP_FIXED_AREA_2, button_FIXED_AREA);
 #endif
 
   if (scan_mode != WIFI_SCAN_WAR_DRIVE) {
@@ -2356,7 +2356,7 @@ void WiFiScan::RunStationScan(uint8_t scan_mode, uint16_t color)
   display_obj.touchToExit();
 #endif
   display_obj.tft.setTextColor(TFT_GREEN, TFT_BLACK);
-  display_obj.setupScrollArea(display_obj.TOP_FIXED_AREA_2, BOT_FIXED_AREA);
+  display_obj.setupScrollArea(display_obj.TOP_FIXED_AREA_2, button_FIXED_AREA);
 #endif
 
   esp_wifi_init(&cfg);
@@ -2403,7 +2403,7 @@ void WiFiScan::RunRawScan(uint8_t scan_mode, uint16_t color)
   display_obj.touchToExit();
 #endif
   display_obj.tft.setTextColor(TFT_GREEN, TFT_BLACK);
-  display_obj.setupScrollArea(display_obj.TOP_FIXED_AREA_2, BOT_FIXED_AREA);
+  display_obj.setupScrollArea(display_obj.TOP_FIXED_AREA_2, button_FIXED_AREA);
 #endif
 
   esp_wifi_init(&cfg);
@@ -2446,7 +2446,7 @@ void WiFiScan::RunDeauthScan(uint8_t scan_mode, uint16_t color)
   display_obj.touchToExit();
 #endif
   display_obj.tft.setTextColor(TFT_RED, TFT_BLACK);
-  display_obj.setupScrollArea(display_obj.TOP_FIXED_AREA_2, BOT_FIXED_AREA);
+  display_obj.setupScrollArea(display_obj.TOP_FIXED_AREA_2, button_FIXED_AREA);
 #endif
 
   esp_wifi_init(&cfg);
@@ -2505,7 +2505,7 @@ void WiFiScan::RunProbeScan(uint8_t scan_mode, uint16_t color)
   display_obj.touchToExit();
 #endif
   display_obj.tft.setTextColor(TFT_GREEN, TFT_BLACK);
-  display_obj.setupScrollArea(display_obj.TOP_FIXED_AREA_2, BOT_FIXED_AREA);
+  display_obj.setupScrollArea(display_obj.TOP_FIXED_AREA_2, button_FIXED_AREA);
 #endif
 
   esp_wifi_init(&cfg);
@@ -2614,7 +2614,7 @@ void WiFiScan::RunBluetoothScan(uint8_t scan_mode, uint16_t color)
     display_obj.touchToExit();
 #endif
     display_obj.tft.setTextColor(TFT_CYAN, TFT_BLACK);
-    display_obj.setupScrollArea(display_obj.TOP_FIXED_AREA_2, BOT_FIXED_AREA);
+    display_obj.setupScrollArea(display_obj.TOP_FIXED_AREA_2, button_FIXED_AREA);
 #endif
     if (scan_mode == BT_SCAN_ALL)
       pBLEScan->setAdvertisedDeviceCallbacks(new bluetoothScanAllCallback(), false);
@@ -2659,7 +2659,7 @@ void WiFiScan::RunBluetoothScan(uint8_t scan_mode, uint16_t color)
     display_obj.touchToExit();
 #endif
     display_obj.tft.setTextColor(TFT_CYAN, TFT_BLACK);
-    display_obj.setupScrollArea(display_obj.TOP_FIXED_AREA_2, BOT_FIXED_AREA);
+    display_obj.setupScrollArea(display_obj.TOP_FIXED_AREA_2, button_FIXED_AREA);
 #endif
     if (scan_mode != BT_SCAN_WAR_DRIVE_CONT)
       pBLEScan->setAdvertisedDeviceCallbacks(new bluetoothScanAllCallback(), false);
@@ -2679,7 +2679,7 @@ void WiFiScan::RunBluetoothScan(uint8_t scan_mode, uint16_t color)
     display_obj.tft.drawCentreString(text_table4[42], 160, 16, 2);
     display_obj.twoPartDisplay(text_table4[43]);
     display_obj.tft.setTextColor(TFT_BLACK, TFT_DARKGREY);
-    display_obj.setupScrollArea(display_obj.TOP_FIXED_AREA_2, BOT_FIXED_AREA);
+    display_obj.setupScrollArea(display_obj.TOP_FIXED_AREA_2, button_FIXED_AREA);
 #endif
     pBLEScan->setAdvertisedDeviceCallbacks(new bluetoothScanSkimmersCallback(), false);
   }

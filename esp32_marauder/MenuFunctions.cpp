@@ -587,20 +587,39 @@ MenuFunctions::MenuFunctions()
 void MenuFunctions::buttonNotSelected(uint8_t b, int8_t x) {
   if (x == -1)
     x = b;
-  display_obj.tft.setFreeFont(NULL);
+  display_obj.tft.setFreeFont(MENU_FONT);
   display_obj.key[b].drawButton(false, current_menu->list->get(x).name);
+  display_obj.tft.drawXBitmap(0,
+                            KEY_Y + b * (KEY_H + KEY_SPACING_Y) - (ICON_H / 2),
+                            menu_icons[current_menu->list->get(x).icon],
+                            ICON_W,
+                            ICON_H,
+                            TFT_BLACK,
+                            current_menu->list->get(x).color);
+  display_obj.tft.setFreeFont(NULL);
 }
 
 void MenuFunctions::buttonSelected(uint8_t b, int8_t x) {
   if (x == -1)
     x = b;
-  display_obj.tft.setFreeFont(NULL);
+  display_obj.tft.setFreeFont(MENU_FONT);
   display_obj.key[b].drawButton(true, current_menu->list->get(x).name);
+  display_obj.tft.drawXBitmap(1,
+                            KEY_Y + b * (KEY_H + KEY_SPACING_Y) - (ICON_H / 2) + 1,
+                            menu_icons[current_menu->list->get(x).icon],
+                            ICON_W - 2,
+                            ICON_H - 2,
+                            current_menu->list->get(x).color,
+                            TFT_BLACK);
+  display_obj.tft.setFreeFont(NULL);
 }
 
 // Function to check menu input
 void MenuFunctions::main(uint32_t currentTime)
 {
+  #ifdef T_DECK
+  extern Trackball trackball_obj;
+  #endif
   // Some function exited and we need to go back to normal
   if (display_obj.exit_draw) {
     wifi_scan_obj.currentScanMode = WIFI_SCAN_OFF;
@@ -863,9 +882,15 @@ void MenuFunctions::main(uint32_t currentTime)
   #endif
 
   #ifdef HAS_BUTTONS
-    #if !(defined(MARAUDER_V6) || defined(MARAUDER_V6_1) || defined(LILYGO_T_DECK))
+    #if !(defined(MARAUDER_V6) || defined(MARAUDER_V6_1))
       #ifndef MARAUDER_M5STICKC
-        if (u_btn.justPressed()){
+      bool u_btn_pressed = false;
+      #ifdef T_DECK
+        u_btn_pressed = trackball_obj.menuPress(TRACKBALL_UP);
+      #else
+        u_btn_pressed = u_btn.justPressed();
+      #endif
+        if (u_btn_pressed){
           if ((wifi_scan_obj.currentScanMode == WIFI_SCAN_OFF) ||
               (wifi_scan_obj.currentScanMode == OTA_UPDATE)) {
             if (current_menu->selected > 0) {
@@ -900,7 +925,13 @@ void MenuFunctions::main(uint32_t currentTime)
           }
         }
       #endif
-      if (d_btn.justPressed()){
+      bool d_btn_pressed = false;
+      #ifdef T_DECK
+        d_btn_pressed = trackball_obj.menuPress(TRACKBALL_DOWN);
+      #else
+        d_btn_pressed = d_btn.justPressed();
+      #endif
+      if (d_btn_pressed){
         if ((wifi_scan_obj.currentScanMode == WIFI_SCAN_OFF) ||
             (wifi_scan_obj.currentScanMode == OTA_UPDATE)) {
           if (current_menu->selected < current_menu->list->size() - 1) {
@@ -1487,6 +1518,7 @@ void MenuFunctions::RunSetup()
         #endif
       #endif
       display_obj.headless_mode = true;
+      display_obj.exit_draw = true;
   });
   this->addNodes(&mainMenu, text_table1[30], TFT_LIGHTGREY, NULL, REBOOT, []() {
     ESP.restart();
@@ -1712,9 +1744,14 @@ void MenuFunctions::RunSetup()
     this->addNodes(&wifiGeneralMenu, "Select EP HTML File", TFT_CYAN, NULL, KEYBOARD_ICO, [this](){
       this->changeMenu(&htmlMenu);
       #if (defined(HAS_BUTTONS) && defined(HAS_SD)) 
-        #if !(defined(MARAUDER_V6) || defined(MARAUDER_V6_1) || defined(LILYGO_T_DECK))
+        #if !(defined(MARAUDER_V6) || defined(MARAUDER_V6_1))
           while(true) {
-            if (d_btn.justPressed()) {
+              #ifdef T_DECK
+                d_btn_pressed = trackball_obj.menuPress(TRACKBALL_DOWN);
+              #else
+                d_btn_pressed = d_btn.justPressed();
+              #endif
+                if (d_btn_pressed) {
               if (evil_portal_obj.selected_html_index > 0)
                 evil_portal_obj.selected_html_index--;
               else
@@ -1725,16 +1762,21 @@ void MenuFunctions::RunSetup()
               this->displayCurrentMenu();
             }
             #ifndef MARAUDER_M5STICKC
-              if (u_btn.justPressed()) {
-                if (evil_portal_obj.selected_html_index < evil_portal_obj.html_files->size() - 1)
-                  evil_portal_obj.selected_html_index++;
-                else
-                  evil_portal_obj.selected_html_index = 0;
-
-                this->htmlMenu.list->set(0, MenuNode{evil_portal_obj.html_files->get(evil_portal_obj.selected_html_index), false, TFT_CYAN, 0, NULL, true, NULL});
-                this->buildButtons(&htmlMenu, 0, evil_portal_obj.html_files->get(evil_portal_obj.selected_html_index));
-                this->displayCurrentMenu();
-              }
+              #ifdef T_DECK
+                u_btn_pressed = trackball_obj.menuPress(TRACKBALL_UP);
+              #else
+                u_btn_pressed = u_btn.justPressed();
+              #endif
+                if (u_btn_pressed) {
+                  if (evil_portal_obj.selected_html_index < evil_portal_obj.html_files->size() - 1)
+                    evil_portal_obj.selected_html_index++;
+                  else
+                    evil_portal_obj.selected_html_index = 0;
+  
+                  this->htmlMenu.list->set(0, MenuNode{evil_portal_obj.html_files->get(evil_portal_obj.selected_html_index), false, TFT_CYAN, 0, NULL, true, NULL});
+                  this->buildButtons(&htmlMenu, 0, evil_portal_obj.html_files->get(evil_portal_obj.selected_html_index));
+                  this->displayCurrentMenu();
+                }
             #endif
             if (c_btn.justPressed()) {
               if (evil_portal_obj.html_files->get(evil_portal_obj.selected_html_index) != "Back") {
@@ -2517,7 +2559,7 @@ void MenuFunctions::RunSetup()
 void MenuFunctions::changeMenu(Menu * menu)
 {
   display_obj.initScrollValues();
-  display_obj.setupScrollArea(TOP_FIXED_AREA, BOT_FIXED_AREA);
+  display_obj.setupScrollArea(TOP_FIXED_AREA, button_FIXED_AREA);
   display_obj.tft.init();
   current_menu = menu;
 

@@ -16,10 +16,15 @@
 
 #ifdef HAS_BUTTONS
   #include "Switches.h"
-  extern Switches u_btn;
-  extern Switches d_btn;
-  extern Switches l_btn;
-  extern Switches r_btn;
+  #ifdef T_DECK
+    #include "Trackball.h"
+    extern Trackball trackball_obj;
+  #else
+    extern Switches u_btn;
+    extern Switches d_btn;
+    extern Switches l_btn;
+    extern Switches r_btn;
+  #endif
   extern Switches c_btn;
 #endif
 

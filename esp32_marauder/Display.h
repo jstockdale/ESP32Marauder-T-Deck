@@ -117,8 +117,8 @@ class Display
       LinkedList<String>* screen_buffer;
     #endif
 
-    // The initial y coordinate of the top of the bottom text line
-    uint16_t yDraw = YMAX - BOT_FIXED_AREA - TEXT_HEIGHT;
+    // The initial y coordinate of the top of the buttontom text line
+    uint16_t yDraw = YMAX - button_FIXED_AREA - TEXT_HEIGHT;
 
     // Keep track of the drawing x coordinate
     uint16_t xPos = 0;
@@ -126,7 +126,7 @@ class Display
     // The initial y coordinate of the top of the scrolling area
     uint16_t yStart = TOP_FIXED_AREA_2;
     // yArea must be a integral multiple of TEXT_HEIGHT
-    uint16_t yArea = YMAX - TOP_FIXED_AREA_2 - BOT_FIXED_AREA;
+    uint16_t yArea = YMAX - TOP_FIXED_AREA_2 - button_FIXED_AREA;
 
     // We have to blank the top line each time the display is scrolled, but this takes up to 13 milliseconds
     // for a full width line, meanwhile the serial buffer may be filling... and overflowing

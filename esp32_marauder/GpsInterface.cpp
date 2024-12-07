@@ -28,6 +28,7 @@ void GpsInterface::begin() {
     String ver = "";
     // L76K GPS USE 9600 BAUDRATE
     Serial1.begin(38400, SERIAL_8N1, GPS_RX, GPS_TX);
+    Serial1.setTimeout(100);
     bool result = false;
     uint32_t startTimeout ;
     for (int i = 0; i < 3; ++i) {
@@ -36,7 +37,7 @@ void GpsInterface::begin() {
         // Get version information
         startTimeout = millis() + 3000;
         Serial.print("Try to init L76K . Wait stop .");
-        while (Serial1.available()) {
+        while (Serial1.available() && millis() < startTimeout) {
             Serial.print(".");
             Serial1.readString();
             if (millis() > startTimeout) {
