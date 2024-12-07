@@ -28,6 +28,25 @@ String CommandLine::getSerialInput() {
     //Serial.println("Should have bytes available: " + bytes_available);
     int bytes_to_read = bytes_available < (254 - serial_buffer_idx) ? bytes_available : (254 - serial_buffer_idx);
     bytes_received = Serial.readBytes(&serial_buffer[serial_buffer_idx], bytes_to_read);
+
+    // echo what we just got to the terminal
+    for (int i = serial_buffer_idx; i < serial_buffer_idx + bytes_received; i++) {
+      // support backspace
+      if (serial_buffer[i] == '\x7f') {
+        for (int j = i; j < 255; j++) {
+          if (j == 0) {
+            break;
+          } else if (j == 254 || j > serial_buffer_idx) {
+            serial_buffer[j] = '\0';
+          } else {
+            serial_buffer[j-1] = serial_buffer[j];
+          }
+        serial_buffer_idx--;
+        }
+      }
+      Serial.print(serial_buffer[i]);
+    }
+    
     serial_buffer_idx += bytes_received;
     if (serial_buffer_idx < 254) {
       serial_buffer[serial_buffer_idx+1] = '\0';
