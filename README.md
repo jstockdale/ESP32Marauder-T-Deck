@@ -41,13 +41,13 @@ This is an extremely early work in progress. It's not cleaned up or stable yet. 
    If it stops working / hangs during initialization, reset your device.
 [X] Battery level works
 [X] SD Card works
+[X] Trackball works
+[X] Headless menu option turns off screen (long press trackball/center button to resume)
 --
-[ ] Trackball - TODO(jstockdale): Add trackball support (in lieu of buttons)
 [ ] Keyboard - TODO(jstockdale): Add keyboard support
-[ ] Screen - TODO(jstockdale): Support turning off screen backlight
 ```
 I recommend using the excellent [M5Launcher](https://github.com/bmorcelli/M5Stick-Launcher) from @bmorcelli to load this and other firmware from the sd card. This makes development easier and also allows you to quick switch between different useful firmwares (eg. Meshtastic, Marauder, and more!)
 
 Please direct any feedback to the Issues page. This is alpha, pre-release software. And comes with no warranty of fitness or guarantees of any time. Use at your own risk. Thanks! :-)
 
-Latest pre-release development build: [pre_alpha_ak08](https://github.com/jstockdale/ESP32Marauder-T-Deck/raw/c4ae23ee15ea0c7201d4796bb6674752f8683c7f/Release%20Bins/esp32_marauder_v1_0_0_20241203_tdeck_pre_alpha_ak08.bin)
+Latest pre-release development build: [pre_alpha_ao14](https://github.com/jstockdale/ESP32Marauder-T-Deck/raw/refs/heads/t-deck/Release%20Bins/esp32_marauder_v1_0_0_20241206_tdeck_pre_alpha_ao14.bin))
