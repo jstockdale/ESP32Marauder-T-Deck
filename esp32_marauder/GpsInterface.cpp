@@ -78,13 +78,13 @@ void GpsInterface::begin() {
         ver = Serial1.readStringUntil('\n');
         Serial.print("Got ver: " + ver);
         if (ver.startsWith("$GPTXT,01,01,02")) {
-            Serial.println("L76K GNSS init succeeded, using L76K GNSS Module\n");
+            Serial.println("L76K GNSS init succeeded, using L76K GNSS Module");
             result = true;
             break;
         }
         delay(500);
     }
-    Serial.print("Initialize the L76K Chip, use GPS + GLONASS\n");
+    Serial.println("Initialize the L76K Chip, use GPS + GLONASS");
     // Initialize the L76K Chip, use GPS + GLONASS
     Serial1.write("$PCAS04,5*1C\r\n");
     delay(250);
