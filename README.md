@@ -43,11 +43,14 @@ This is an extremely early work in progress. It's not cleaned up or stable yet. 
 [X] SD Card works
 [X] Trackball works
 [X] Headless menu option turns off screen (long press trackball/center button to resume)
+[X] Improved serial console (non-blocking! don't user arrow keys for now lol)
+[X] Moved Evil Portal files to /portals directory on SD card
 --
 [ ] Keyboard - TODO(jstockdale): Add keyboard support
+[ ] Serial Console - TODO(jstockdale): Handle arrow keys
 ```
 I recommend using the excellent [M5Launcher](https://github.com/bmorcelli/M5Stick-Launcher) from @bmorcelli to load this and other firmware from the sd card. This makes development easier and also allows you to quick switch between different useful firmwares (eg. Meshtastic, Marauder, and more!)
 
 Please direct any feedback to the Issues page. This is alpha, pre-release software. And comes with no warranty of fitness or guarantees of any time. Use at your own risk. Thanks! :-)
 
-Latest pre-release development build: [pre_alpha_ao14](https://github.com/jstockdale/ESP32Marauder-T-Deck/raw/refs/heads/t-deck/Release%20Bins/esp32_marauder_v1_0_0_20241206_tdeck_pre_alpha_ao14.bin))
+Latest pre-release development build: [pre_alpha_ao40](https://github.com/jstockdale/ESP32Marauder-T-Deck/raw/refs/heads/t-deck/Release%20Bins/esp32_marauder_v1_0_0_20241207_tdeck_pre_alpha_ao40.bin))
