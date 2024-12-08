@@ -31,7 +31,7 @@ Check out the project [wiki](https://github.com/justcallmekoko/ESP32Marauder/wik
 You can buy the ESP32 Marauder using [this link](https://www.tindie.com/products/justcallmekoko/esp32-marauder/)
 
 # T-Deck Edition
-This is an extremely early work in progress. It's not cleaned up or stable yet. And lots of features aren't fully working. A quick summary of the current progress is below.
+This is an early work in progress. It's mostly stable. Some features aren't fully working. A quick summary of the current progress is below.
 ```
 [X] Boots
 [X] Serial and CLI both work
