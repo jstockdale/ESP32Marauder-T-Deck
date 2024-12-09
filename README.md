@@ -39,6 +39,7 @@ This is an early work in progress. It's mostly stable. Some features aren't full
 [X] Headless menu option turns off screen (long press trackball/center button to resume)
 [X] Improved serial console (non-blocking! don't user arrow keys for now lol)
 [X] Moved Evil Portal files to /portals directory on SD card
+[X] Added ChannelHop Setting so you can enable or disable channel hopping
 --
 [ ] Keyboard - TODO(jstockdale): Add keyboard support
 [ ] Serial Console - TODO(jstockdale): Handle arrow keys
