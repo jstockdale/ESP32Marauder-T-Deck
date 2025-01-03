@@ -24,14 +24,22 @@ MenuFunctions::MenuFunctions()
 #ifdef HAS_ST7789
   uint8_t MenuFunctions::updateTouch(int16_t *x, int16_t *y, uint16_t threshold) {
     if (!display_obj.headless_mode) {
-      uint8_t result = touch.isPressed() && touch.getPoint(x, y, touch.getSupportTouchPoint());
-      #ifdef T_DECK
+      int16_t t_x[5] = {0,0,0,0,0}, t_y[5] = {0,0,0,0,0};
+      uint8_t result = touch.isPressed() && touch.getPoint(t_x, t_y, touch.getSupportTouchPoint());
+      if(result > 0) {
+        for(int i = 0; i < result; i++) {
+          x[i] = t_x[i];
+          y[i] = t_y[i];
+        }
+        #ifdef T_DECK
         int16_t tmp_x[5] = {0,0,0,0,0}, tmp_y[5] = {0,0,0,0,0}; // To throw away touch coordinates
+        int16_t points = 0;
         // throw away touches
         for (int i = 0; i < THROW_AWAY_TOUCH_COUNT; i++) {
-          touch.isPressed() && touch.getPoint(tmp_x, tmp_y, touch.getSupportTouchPoint());
+          points = touch.getPoint(tmp_x, tmp_y, touch.getSupportTouchPoint());
         }
-      #endif
+        #endif
+      }
       return result;
     } else {
       return !display_obj.headless_mode;
@@ -71,16 +79,16 @@ MenuFunctions::MenuFunctions()
     int16_t tmpX[5] = {0,0,0,0,0}, tmpY[5] = {0,0,0,0,0};
   
     bool touched = touch.isPressed();
-    touch.getPoint(touchX, touchY, touch.getSupportTouchPoint());
+    int16_t points = touch.getPoint(touchX, touchY, touch.getSupportTouchPoint());
 
-    #ifdef T_DECK
-      // throw away touches
-      for (int i = 0; i < THROW_AWAY_TOUCH_COUNT; i++) {
-        touch.getPoint(tmpX, tmpY, touch.getSupportTouchPoint());
-      }
-    #endif
+//    #ifdef T_DECK
+//      // throw away touches
+//      for (int i = 0; i < THROW_AWAY_TOUCH_COUNT; i++) {
+//        touch.getPoint(tmpX, tmpY, touch.getSupportTouchPoint());
+//      }
+//    #endif
   
-    if(!touched)
+    if(!touched || points == 0)
     {
       return false;
     }
@@ -115,8 +123,8 @@ MenuFunctions::MenuFunctions()
   
     lv_disp_drv_t disp_drv;
     lv_disp_drv_init(&disp_drv);
-    disp_drv.hor_res = WIDTH_1;
-    disp_drv.ver_res = HEIGHT_1;
+    disp_drv.hor_res = 320;
+    disp_drv.ver_res = 240;
     disp_drv.flush_cb = my_disp_flush;
     disp_drv.buffer = &disp_buf;
     lv_disp_drv_register(&disp_drv);
@@ -147,7 +155,7 @@ MenuFunctions::MenuFunctions()
     extern WiFiScan wifi_scan_obj;
   
     lv_obj_t * list1 = lv_list_create(lv_scr_act(), NULL);
-    lv_obj_set_size(list1, 160, 200);
+    lv_obj_set_size(list1, 320, 240);
     lv_obj_set_width(list1, LV_HOR_RES);
     lv_obj_align(list1, NULL, LV_ALIGN_CENTER, 0, 0);
   
@@ -250,7 +258,7 @@ MenuFunctions::MenuFunctions()
     extern EvilPortal evil_portal_obj;
   
     lv_obj_t * list1 = lv_list_create(lv_scr_act(), NULL);
-    lv_obj_set_size(list1, 160, 200);
+    lv_obj_set_size(list1, 320, 240);
     lv_obj_set_width(list1, LV_HOR_RES);
     lv_obj_align(list1, NULL, LV_ALIGN_CENTER, 0, 0);
   
@@ -332,7 +340,7 @@ MenuFunctions::MenuFunctions()
     extern LinkedList<AirTag>* airtags;
   
     lv_obj_t * list1 = lv_list_create(lv_scr_act(), NULL);
-    lv_obj_set_size(list1, 160, 200);
+    lv_obj_set_size(list1, 320, 240);
     lv_obj_set_width(list1, LV_HOR_RES);
     lv_obj_align(list1, NULL, LV_ALIGN_CENTER, 0, 0);
   
@@ -589,7 +597,7 @@ void MenuFunctions::buttonNotSelected(uint8_t b, int8_t x) {
     x = b;
   display_obj.tft.setFreeFont(MENU_FONT);
   display_obj.key[b].drawButton(false, current_menu->list->get(x).name);
-  display_obj.tft.drawXBitmap(0,
+  display_obj.tft.drawXBitmap(1,
                             KEY_Y + b * (KEY_H + KEY_SPACING_Y) - (ICON_H / 2),
                             menu_icons[current_menu->list->get(x).icon],
                             ICON_W,
@@ -656,7 +664,8 @@ void MenuFunctions::main(uint32_t currentTime)
   boolean pressed = false;
   // This is code from bodmer's keypad example
   int16_t t_x[5] = {0,0,0,0,0}, t_y[5] = {0,0,0,0,0}; // To store the touch coordinates
-
+  int16_t points = 0;
+  
   // Get the display buffer out of the way
   if ((wifi_scan_obj.currentScanMode != WIFI_SCAN_OFF ) &&
       (wifi_scan_obj.currentScanMode != WIFI_ATTACK_BEACON_SPAM) &&
@@ -676,7 +685,8 @@ void MenuFunctions::main(uint32_t currentTime)
   // getTouch causes a 10ms delay which makes beacon spam less effective
   #ifdef HAS_ST7789
     if (!this->disable_touch)
-        pressed = this->updateTouch(t_x, t_y);
+        points = this->updateTouch(t_x, t_y);
+        pressed = points && points > 0;
   #endif
 
 
@@ -833,11 +843,16 @@ void MenuFunctions::main(uint32_t currentTime)
     {
       // Need this to set all keys to false
       for (uint8_t b = 0; b < BUTTON_ARRAY_LEN; b++) {
-        if (pressed && display_obj.key[b].contains(t_x[0], t_y[0])) {
-          display_obj.key[b].press(true);  // tell the button it is pressed
-        } else {
-          display_obj.key[b].press(false);  // tell the button it is NOT pressed
+        bool found = false;
+        if (pressed) // && display_obj.key[b].contains(t_x[0], t_y[0]))
+        {
+          for (int16_t i = 0; i < points; i++) {
+            if(display_obj.key[b].contains(t_x[i], t_y[i])) {
+              found = true;
+            }
+          }
         }
+        display_obj.key[b].press(found);
       }
   
       // Check if any key has changed state
@@ -847,10 +862,10 @@ void MenuFunctions::main(uint32_t currentTime)
           display_obj.key[b].drawButton(true, current_menu->list->get(b).name);
           if (current_menu->list->get(b).name != text09)
             display_obj.tft.drawXBitmap(0,
-                                        KEY_Y + b * (KEY_H + KEY_SPACING_Y) - (ICON_H / 2),
+                                        KEY_Y + b * (KEY_H + KEY_SPACING_Y) - (ICON_H / 2) + 1,
                                         menu_icons[current_menu->list->get(b).icon],
-                                        ICON_W,
-                                        ICON_H,
+                                        ICON_W - 2,
+                                        ICON_H - 2,
                                         current_menu->list->get(b).color,
                                         TFT_BLACK);
         }
@@ -873,7 +888,7 @@ void MenuFunctions::main(uint32_t currentTime)
                                         TFT_BLACK,
                                         current_menu->list->get(b).color);
         }
-  
+        delay(10);
         display_obj.tft.setFreeFont(NULL);
       }
     }

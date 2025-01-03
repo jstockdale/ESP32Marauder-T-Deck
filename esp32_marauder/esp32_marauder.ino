@@ -65,23 +65,51 @@ TouchDrvGT911 touch;
 
 #ifdef HAS_BUTTONS
   #include "Switches.h"
-  
-  #if (U_BTN >= 0)
-    Switches u_btn = Switches(U_BTN, 1000, U_PULL);
+  #ifdef T_DECK
+    #include "Trackball.h"
+    // Setup for Trackball
+//    void IRAM_ATTR ISR_up();
+//    void IRAM_ATTR ISR_down();
+//    void IRAM_ATTR ISR_left();
+//    void IRAM_ATTR ISR_right();
+
+    bool trackball_interrupted = false;
+    int8_t trackball_up_count = 0;
+    int8_t trackball_down_count = 0;
+    int8_t trackball_left_count = 0;
+    int8_t trackball_right_count = 0;
+    void IRAM_ATTR ISR_up()   { trackball_interrupted = true; trackball_up_count = 1;   }
+    void IRAM_ATTR ISR_down() { trackball_interrupted = true; trackball_down_count = 1; }
+    void IRAM_ATTR ISR_left() { trackball_interrupted = true; trackball_left_count = 1; }
+    void IRAM_ATTR ISR_right(){ trackball_interrupted = true; trackball_right_count = 1;}
+    
+    void ISR_rst(){
+      trackball_up_count = 0;
+      trackball_down_count = 0;
+      trackball_left_count = 0;
+      trackball_right_count = 0;
+      trackball_interrupted = false;
+    };
+    
+    Trackball trackball_obj;
   #endif
-  #if (D_BTN >= 0)
-    Switches d_btn = Switches(D_BTN, 1000, D_PULL);
+  #ifndef T_DECK
+    #ifdef HAS_U
+      Switches u_btn = Switches(U_BTN, 1000, U_PULL);
+    #endif
+    #ifdef HAS_D
+      Switches d_btn = Switches(D_BTN, 1000, D_PULL);
+    #endif
+    #ifdef HAS_L
+      Switches l_btn = Switches(L_BTN, 1000, L_PULL);
+    #endif
+    #ifdef HAS_R
+      Switches r_btn = Switches(R_BTN, 1000, R_PULL);
+    #endif
   #endif
-  #if (L_BTN >= 0)
-    Switches l_btn = Switches(L_BTN, 1000, L_PULL);
-  #endif
-  #if (R_BTN >= 0)
-    Switches r_btn = Switches(R_BTN, 1000, R_PULL);
-  #endif
-  #if (C_BTN >= 0)
+  #ifdef HAS_C
     Switches c_btn = Switches(C_BTN, 1000, C_PULL);
   #endif
-
 #endif
 
 WiFiScan wifi_scan_obj;
@@ -207,7 +235,8 @@ void setup()
   #endif
   */
 
-      pinMode(BOARD_TOUCH_INT, INPUT);
+  #ifdef T_DECK
+    pinMode(BOARD_TOUCH_INT, INPUT);
 
     //! The board peripheral power control pin needs to be set to HIGH when using the peripheral
     pinMode(BOARD_POWERON, OUTPUT);
@@ -235,7 +264,18 @@ void setup()
     // Set mirror xy
     touch.setMirrorXY(false, true);
 
-
+    // Setup trackball interrupt handlers
+    Serial.println("Configuring trackball interrupts");
+    pinMode(U_BTN, INPUT_PULLUP);
+    attachInterrupt(U_BTN, ISR_up, FALLING);
+    pinMode(D_BTN, INPUT_PULLUP);
+    attachInterrupt(D_BTN, ISR_down, FALLING);
+    pinMode(L_BTN, INPUT_PULLUP);
+    attachInterrupt(L_BTN, ISR_left, FALLING);
+    pinMode(R_BTN, INPUT_PULLUP);
+    attachInterrupt(R_BTN, ISR_right, FALLING);
+  #endif
+  
   #ifdef HAS_SCREEN
     Serial.println("WIDTH, HEIGHT: " + String(TFT_WIDTH) + ", " + String(TFT_HEIGHT));
     display_obj.tft.drawCentreString("ESP32 Marauder", 320/2, 240 * 0.33, 1);
@@ -380,6 +420,7 @@ void setup()
 
   #ifdef HAS_GPS
     Serial.println(F("Initializing GPS"));
+    display_obj.tft.println("Initializing GPS");
     gps_obj.begin();
     
     #ifdef HAS_SCREEN
@@ -443,8 +484,8 @@ void loop()
   bool mini = false;
 
   #ifdef HAS_SCREEN
-    display_obj.tft.setTextColor(TFT_GREEN, TFT_BLACK);
-    display_obj.tft.drawString(String(currentTime), 272, TFT_HEIGHT * 0.05, 1);
+//    display_obj.tft.setTextColor(TFT_GREEN, TFT_BLACK);
+//    display_obj.tft.drawString(String(currentTime), 272, TFT_HEIGHT * 0.05, 1);
     //display_obj.tft.drawString(String(battery_obj.battery_level), 272, TFT_HEIGHT * 0.1, 1);
     //display_obj.tft.drawString(String(battery_obj.battery_value), 272, TFT_HEIGHT * 0.15, 1);
   #endif
@@ -456,15 +497,25 @@ void loop()
   #ifdef HAS_ST7789
     #ifdef HAS_BUTTONS
       if (c_btn.isHeld()) {
-        if (menu_function_obj.disable_touch)
-          menu_function_obj.disable_touch = false;
-        else
-          menu_function_obj.disable_touch = true;
-
+        if (display_obj.headless_mode) {
+          backlightOn();
+          display_obj.headless_mode = false;
+          while (!c_btn.justReleased()) {
+            delay(1);
+          }
+        } else {
+          if (menu_function_obj.disable_touch) {
+            menu_function_obj.disable_touch = false;
+          }
+          else {
+            menu_function_obj.disable_touch = true;
+          }
+          menu_function_obj.updateStatusBar();
+          while (!c_btn.justReleased()) {
+            delay(1);
+          }
         menu_function_obj.updateStatusBar();
-
-        while (!c_btn.justReleased())
-          delay(1);
+        }
       }
     #endif
   #endif

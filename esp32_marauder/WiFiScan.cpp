@@ -4608,14 +4608,15 @@ void WiFiScan::eapolMonitorMain(uint32_t currentTime)
 
     int16_t t_x[5] = {0, 0, 0, 0, 0}, t_y[5] = {0, 0, 0, 0, 0}; // To store the touch coordinates
     int16_t tmp_x[5] = {0, 0, 0, 0, 0}, tmp_y[5] = {0, 0, 0, 0, 0}; // To throw away touch coordinates
-
+    int16_t points = 0;
+    
     // Do the touch stuff
 #ifdef HAS_ST7789
     pressed = touch.isPressed();
 #endif
 
     if (pressed) {
-      touch.getPoint(t_x, t_y, touch.getSupportTouchPoint());
+      points = touch.getPoint(t_x, t_y, touch.getSupportTouchPoint());
       Serial.print("Got touch | X: ");
       Serial.print(t_x[0]);
       Serial.print(" Y: ");
@@ -4628,16 +4629,19 @@ void WiFiScan::eapolMonitorMain(uint32_t currentTime)
 #endif
     }
 
-
     // Check buttons for presses
     for (uint8_t b = 0; b < BUTTON_ARRAY_LEN; b++)
     {
-      if (pressed && display_obj.key[b].contains(t_x[0], t_y[0]))
+      bool found = false;
+      if (pressed) // && display_obj.key[b].contains(t_x[0], t_y[0]))
       {
-        display_obj.key[b].press(true);
-      } else {
-        display_obj.key[b].press(false);
+        for (int16_t i = 0; i < points; i++) {
+          if(display_obj.key[b].contains(t_x[i], t_y[i])) {
+            found = true;
+          }
+        }
       }
+      display_obj.key[b].press(found);
     }
 
     // Which buttons pressed
@@ -4769,14 +4773,15 @@ void WiFiScan::packetMonitorMain(uint32_t currentTime)
 
     int16_t t_x[5] = {0, 0, 0, 0, 0}, t_y[5] = {0, 0, 0, 0, 0}; // To store the touch coordinates
     int16_t tmp_x[5] = {0, 0, 0, 0, 0}, tmp_y[5] = {0, 0, 0, 0, 0}; // To throw away touch coordinates
-
+    int16_t points;
+    
     // Do the touch stuff
 #ifdef HAS_ST7789
     pressed = touch.isPressed();
 #endif
 
     if (pressed) {
-      touch.getPoint(t_x, t_y, touch.getSupportTouchPoint());
+      points = touch.getPoint(t_x, t_y, touch.getSupportTouchPoint());
       Serial.print("Got touch | X: ");
       Serial.print(t_x[0]);
       Serial.print(" Y: ");
@@ -4789,16 +4794,18 @@ void WiFiScan::packetMonitorMain(uint32_t currentTime)
 #endif
     }
 
-
-    // Check buttons for presses
     for (uint8_t b = 0; b < BUTTON_ARRAY_LEN; b++)
     {
-      if (pressed && display_obj.key[b].contains(t_x[0], t_y[0]))
+      bool found = false;
+      if (pressed) // && display_obj.key[b].contains(t_x[0], t_y[0]))
       {
-        display_obj.key[b].press(true);
-      } else {
-        display_obj.key[b].press(false);
+        for (int16_t i = 0; i < points; i++) {
+          if(display_obj.key[b].contains(t_x[i], t_y[i])) {
+            found = true;
+          }
+        }
       }
+      display_obj.key[b].press(found);
     }
 
     // Which buttons pressed
