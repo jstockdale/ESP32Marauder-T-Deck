@@ -36,6 +36,10 @@ void Display::RunSetup()
     tft.setRotation(1);
   #endif
 
+  #ifdef T_EMBED
+    tft.setRotation(3);
+  #endif
+
   tft.setCursor(0, 0);
 
   #ifdef HAS_ILI9341
@@ -398,7 +402,7 @@ int Display::scroll_line(uint32_t color) {
 
 // Function to setup hardware scroll for TFT screen
 void Display::setupScrollArea(uint16_t tfa, uint16_t bfa) {
-  #ifdef T_DECK
+  #ifdef T_DECK || T_EMBED
     return;
   #endif
   //Serial.println(F("setupScrollArea()"));
@@ -427,7 +431,7 @@ void Display::setupScrollArea(uint16_t tfa, uint16_t bfa) {
 
 
 void Display::scrollAddress(uint16_t vsp) {
-  #ifdef T_DECK
+  #ifdef T_DECK || T_EMBED
     return;
   #endif
   #ifdef HAS_ILI9341

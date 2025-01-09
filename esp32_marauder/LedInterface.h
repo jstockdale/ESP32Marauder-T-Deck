@@ -8,7 +8,7 @@
 #include <Arduino.h>
 #include <Adafruit_NeoPixel.h>
 
-#define Pixels 1
+#define Pixels 8
 
 #define MODE_OFF 0
 #define MODE_RAINBOW 1
@@ -23,6 +23,7 @@ class LedInterface {
 
   private:
     uint32_t initTime = 0;
+    uint32_t currentTime = 0;
 
     int current_fade_itter = 1;
     int wheel_pos = 255;

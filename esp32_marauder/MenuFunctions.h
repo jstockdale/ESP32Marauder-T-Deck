@@ -26,6 +26,7 @@
     extern Switches r_btn;
   #endif
   extern Switches c_btn;
+  extern Switches b_btn;
 #endif
 
 extern WiFiScan wifi_scan_obj;

@@ -8,16 +8,21 @@ void LedInterface::RunSetup() {
   //Serial.println("Setting neopixel to black...");
   strip.setBrightness(0);
   strip.begin();
-  strip.setPixelColor(0, strip.Color(0, 0, 0));
+  for( int i = 0; i < Pixels; i++) {
+    strip.setPixelColor(0, strip.Color(0, 0, 0));
+  }
   strip.show();
   //delay(100);
   strip.setBrightness(50);
-  strip.setPixelColor(0, strip.Color(0, 0, 0));
+  for( int i = 0; i < Pixels; i++) {
+    strip.setPixelColor(i, strip.Color(0, 0, 0));
+  }
   strip.show();
   this->initTime = millis();
 }
 
 void LedInterface::main(uint32_t currentTime) {
+  this->currentTime = currentTime;
   if ((!settings_obj.loadSetting<bool>("EnableLED")) ||
       (this->current_mode == MODE_OFF)) {
     this->ledOff();
@@ -50,7 +55,12 @@ uint8_t LedInterface::getMode() {
 }
 
 void LedInterface::setColor(int r, int g, int b) {
-  strip.setPixelColor(0, strip.Color(r, g, b));
+  for( int i = 0; i < Pixels; i++) {
+    int elapsed = this->currentTime - this->initTime;
+    int modulo = elapsed % 5000;
+    int brightness =  (modulo <= 2500) ? 192 - (127 * modulo / 2500) : 192 - (127 * (5000 - modulo) / 2500);
+    strip.setPixelColor(i, strip.Color(brightness * r / 255, brightness * r / 255, brightness * b / 255));
+  }
   strip.show();  
 }
 
@@ -67,7 +77,9 @@ void LedInterface::ledOff() {
 }
 
 void LedInterface::rainbow() {
-  strip.setPixelColor(0, this->Wheel((0 * 256 / 100 + this->wheel_pos) % 256));
+  for( int i = 0; i < Pixels; i++) {
+    strip.setPixelColor(i, this->Wheel((0 * 256 / 100 + this->wheel_pos) % 256));
+  }
   strip.show();
 
   this->current_fade_itter++;

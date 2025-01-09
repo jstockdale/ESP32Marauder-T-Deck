@@ -19,7 +19,8 @@
   //#define MARAUDER_DEV_BOARD_PRO
   //#define XIAO_ESP32_S3
   //#define MARAUDER_REV_FEATHER
-  #define LILYGO_T_DECK
+  //#define LILYGO_T_DECK
+  #define LILYGO_T_EMBED
   //// END BOARD TARGETS
 
   #define MARAUDER_VERSION "v1.1.0"
@@ -49,6 +50,8 @@
     #define HARDWARE_NAME "XIAO ESP32 S3"
   #elif defined(LILYGO_T_DECK)
     #define HARDWARE_NAME "LILYGO T-Deck (Plus)"
+  #elif defined(LILYGO_T_EMBED)
+    #define HARDWARE_NAME "LILYGO T-Embed (CC1101)"
   #else
     #define HARDWARE_NAME "ESP32"
   #endif
@@ -225,6 +228,23 @@
   #endif
   //// END BOARD FEATURES
 
+  
+  #if defined(LILYGO_T_EMBED)
+    //#define FLIPPER_ZERO_HAT
+    //#define HAS_BATTERY
+    #define HAS_BT
+    #define HAS_BT_REMOTE
+    #define HAS_BUTTONS
+    #define HAS_NEOPIXEL_LED
+    //#define HAS_PWR_MGMT
+    #define HAS_SCREEN
+    #define HAS_SD
+    #define USE_SD
+    //#define HAS_TEMP_SENSOR
+    //#define HAS_GPS
+  #endif
+  //// END BOARD FEATURES
+
   //// POWER MANAGEMENT
   #ifdef HAS_PWR_MGMT
     #ifdef MARAUDER_M5STICKC
@@ -356,6 +376,29 @@
       #define D_PULL true
     #endif  
 
+    #ifdef LILYGO_T_EMBED
+      #define L_BTN -1
+      #define C_BTN 0
+      #define U_BTN -1
+      #define R_BTN -1
+      #define D_BTN -1
+      #define B_BTN BOARD_USER_KEY
+
+      //#define HAS_L
+      //#define HAS_R
+      #define HAS_U
+      #define HAS_D
+      #define HAS_C
+      #define HAS_B
+
+      #define L_PULL true
+      #define C_PULL true
+      #define U_PULL true
+      #define R_PULL true
+      #define D_PULL true
+      #define B_PULL true
+    #endif
+    
   #endif
   //// END BUTTON DEFINITIONS
 
@@ -800,6 +843,68 @@
       #define KIT_LED_BUILTIN 13
     #endif 
 
+    #if defined(LILYGO_T_EMBED)
+      #define T_EMBED
+
+      #define HAS_POWER_BTN
+
+      #define HAS_ST7789
+      #define SCREEN_CHAR_WIDTH 40
+
+      #define SCREEN_BUFFER
+      #define MAX_SCREEN_BUFFER 16
+    
+      #define BANNER_TEXT_SIZE 2
+
+      #define TFT_WIDTH 320
+      #define TFT_HEIGHT 170
+      #define TFT_BL 21
+
+      #define TFT_DIY
+
+      #define CHAR_WIDTH 6
+      #define SCREEN_WIDTH TFT_WIDTH
+      #define SCREEN_HEIGHT TFT_HEIGHT
+      #define HEIGHT_1 TFT_WIDTH
+      #define WIDTH_1 TFT_HEIGHT
+      #define STANDARD_FONT_CHAR_LIMIT (TFT_WIDTH/6) // number of characters on a single line with normal font
+      #define TEXT_HEIGHT 16 // Height of text to be printed and scrolled
+      #define button_FIXED_AREA 0 // Number of lines in buttontom fixed area (lines counted from buttontom of screen)
+      #define TOP_FIXED_AREA 48 // Number of lines in top fixed area (lines counted from top of screen)
+      #define YMAX 170 // buttontom of screen area
+      #define minimum(a,b)     (((a) < (b)) ? (a) : (b))
+      //#define MENU_FONT NULL
+      #define MENU_FONT &FreeMono9pt7b // Winner
+      //#define MENU_FONT &FreeMonoBold9pt7b
+      //#define MENU_FONT &FreeSans9pt7b
+      //#define MENU_FONT &FreeSansBold9pt7b
+      #define BUTTON_SCREEN_LIMIT 12
+      #define BUTTON_ARRAY_LEN 12
+      #define STATUS_BAR_WIDTH 16
+      #define LVGL_TICK_PERIOD 6
+
+      #define FRAME_X 100
+      #define FRAME_Y 64
+      #define FRAME_W 120
+      #define FRAME_H 50
+    
+      // Red zone size
+      #define REDBUTTON_X FRAME_X
+      #define REDBUTTON_Y FRAME_Y
+      #define REDBUTTON_W (FRAME_W/2)
+      #define REDBUTTON_H FRAME_H
+    
+      // Green zone size
+      #define GREENBUTTON_X (REDBUTTON_X + REDBUTTON_W)
+      #define GREENBUTTON_Y FRAME_Y
+      #define GREENBUTTON_W (FRAME_W/2)
+      #define GREENBUTTON_H FRAME_H
+    
+      #define STATUSBAR_COLOR 0x4A49
+    
+      #define KIT_LED_BUILTIN 13
+    #endif
+
   #endif
   //// END DISPLAY DEFINITIONS
 
@@ -915,7 +1020,7 @@
     #define BUTTON_PADDING 60
   #endif
 
-  #if defined(LILYGO_T_DECK)
+  #if defined(LILYGO_T_DECK) || defined(LILYGO_T_EMBED)
     #define BANNER_TIME 100
     
     #define COMMAND_PREFIX "!"
@@ -986,6 +1091,10 @@
       #define SD_CS 39
     #endif
 
+    #ifdef LILYGO_T_EMBED
+      #define SD_CS 13
+    #endif
+
   #endif
   //// END SD DEFINITIONS
 
@@ -1039,7 +1148,7 @@
     #define MEM_LOWER_LIM 20000
   #elif defined(XIAO_ESP32_S3)
     #define MEM_LOWER_LIM 20000
-  #elif defined(LILYGO_T_DECK)
+  #elif defined(LILYGO_T_DECK) || defined(LILYGO_T_EMBED)
     #define MEM_LOWER_LIM 20000
   #endif
   //// END MEMORY LOWER LIMIT STUFF
@@ -1053,6 +1162,8 @@
       #define PIN 16
     #elif defined(MARAUDER_REV_FEATHER)
       #define PIN 33
+    #elif defined(LILYGO_T_EMBED)
+      #define PIN 14
     #else
       #define PIN 25
     #endif
@@ -1083,7 +1194,7 @@
     #define MAX_HTML_SIZE 20000
   #elif defined(XIAO_ESP32_S3)
     #define MAX_HTML_SIZE 20000
-  #elif defined(LILYGO_T_DECK)
+  #elif defined(LILYGO_T_DECK) || defined(LILYGO_T_EMBED)
     #define MAX_HTML_SIZE 20000
   #else
     #define MAX_HTML_SIZE 20000
@@ -1154,7 +1265,7 @@
     #define MARAUDER_TITLE_BYTES 13578
   #elif defined(MARAUDER_REV_FEATHER)
     #define MARAUDER_TITLE_BYTES 13578
-  #elif defined(LILYGO_T_DECK)
+  #elif defined(LILYGO_T_DECK) || defined(LILYGO_T_EMBED)
     #define MARAUDER_TITLE_BYTES 13578
   #else
     #define MARAUDER_TITLE_BYTES 13578

@@ -5,8 +5,15 @@ Partition Scheme: Minimal SPIFFS
 https://www.online-utility.org/image/convert/to/XBM
 */
 
-#include "Setup210_LilyGo_T_Deck.h"
 #include "configs.h"
+
+#ifdef LILYGO_T_DECK
+  #include "Setup210_LilyGo_T_Deck.h"
+#endif
+#ifdef LILYGO_T_EMBED
+  #include "Setup214_LilyGo_T_Embed_PN532.h"
+#endif
+
 #include "TouchDrvGT911.hpp"
 
 TouchDrvGT911 touch;
@@ -65,6 +72,15 @@ TouchDrvGT911 touch;
 
 #ifdef HAS_BUTTONS
   #include "Switches.h"
+  #ifdef T_EMBED
+  #include <RotaryEncoder.h>
+  //extern RotaryEncoder *encoder;
+  //IRAM_ATTR void checkPosition();
+  RotaryEncoder *encoder = nullptr;
+  IRAM_ATTR void checkPosition() {
+      encoder->tick(); // just call tick() to check the state.
+  }
+  #endif
   #ifdef T_DECK
     #include "Trackball.h"
     // Setup for Trackball
@@ -93,7 +109,7 @@ TouchDrvGT911 touch;
     
     Trackball trackball_obj;
   #endif
-  #ifndef T_DECK
+  #if !defined(T_DECK) && !defined(T_EMBED)
     #ifdef HAS_U
       Switches u_btn = Switches(U_BTN, 1000, U_PULL);
     #endif
@@ -109,6 +125,9 @@ TouchDrvGT911 touch;
   #endif
   #ifdef HAS_C
     Switches c_btn = Switches(C_BTN, 1000, C_PULL);
+  #endif
+  #ifdef HAS_B
+    Switches b_btn = Switches(B_BTN, 1000, B_PULL);
   #endif
 #endif
 
@@ -182,6 +201,15 @@ void backlightOff() {
   #endif
 }
 
+void powerOff() {
+  #ifdef T_EMBED
+  // T_EMBED doesn't have a physical on-off switch so long-pressing
+  // the user button (IO06) is used to trigger deep sleeping device.
+    digitalWrite(BOARD_PWR_EN,LOW); 
+    esp_sleep_enable_ext0_wakeup((gpio_num_t)BOARD_USER_KEY,LOW); 
+    esp_deep_sleep_start();
+  #endif
+}
 
 void setup()
 {
@@ -211,6 +239,64 @@ void setup()
     digitalWrite(SD_CS, HIGH);
 
     delay(10);
+  #endif
+
+  #ifdef T_EMBED
+    // LORA、SD and LCD use the same spi, in order to avoid mutual influence; 
+    // before powering on, all CS signals should be pulled high and in an unselected state;
+    pinMode(TFT_CS, OUTPUT);
+    digitalWrite(TFT_CS, HIGH);
+    pinMode(BOARD_SD_CS, OUTPUT);
+    digitalWrite(BOARD_SD_CS, HIGH);
+    pinMode(BOARD_LORA_CS, OUTPUT);
+    digitalWrite(BOARD_LORA_CS, HIGH);
+
+    // Init system
+    pinMode(TFT_BL, OUTPUT);
+    digitalWrite(TFT_BL, LOW);
+
+    pinMode(BOARD_PWR_EN, OUTPUT);
+    digitalWrite(BOARD_PWR_EN, HIGH);  // Power on CC1101 and LED
+
+    pinMode(BOARD_PN532_RF_REST, OUTPUT);
+    digitalWrite(BOARD_PN532_RF_REST, HIGH); 
+
+    pinMode(ENCODER_KEY, INPUT);
+    pinMode(BOARD_USER_KEY, INPUT);
+
+    pinMode(BOARD_PN532_IRQ, OPEN_DRAIN);
+
+    pinMode(ENCODER_KEY, INPUT);
+    // use TWO03 mode when PIN_IN1, PIN_IN2 signals are both LOW or HIGH in latch position.
+    encoder = new RotaryEncoder(ENCODER_INA, ENCODER_INB, RotaryEncoder::LatchMode::TWO03);
+
+    // register interrupt routine
+    attachInterrupt(digitalPinToInterrupt(ENCODER_INA), checkPosition, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(ENCODER_INB), checkPosition, CHANGE);
+  #endif
+
+  #ifdef T_DECK
+    //! The board peripheral power control pin needs to be set to HIGH when using the peripheral
+    pinMode(BOARD_POWERON, OUTPUT);
+    digitalWrite(BOARD_POWERON, HIGH);
+
+    //! Set CS on all SPI buses to high level during initialization
+    pinMode(BOARD_SDCARD_CS, OUTPUT);
+    pinMode(RADIO_CS_PIN, OUTPUT);
+    pinMode(BOARD_TFT_CS, OUTPUT);
+
+    digitalWrite(BOARD_SDCARD_CS, HIGH);
+    digitalWrite(RADIO_CS_PIN, HIGH);
+    digitalWrite(BOARD_TFT_CS, HIGH);
+
+    pinMode(BOARD_SPI_MISO, INPUT_PULLUP);
+    SPI.begin(BOARD_SPI_SCK, BOARD_SPI_MISO, BOARD_SPI_MOSI); //SD
+
+    pinMode(BOARD_BOOT_PIN, INPUT_PULLUP);
+    pinMode(BOARD_TBOX_G02, INPUT_PULLUP);
+    pinMode(BOARD_TBOX_G01, INPUT_PULLUP);
+    pinMode(BOARD_TBOX_G04, INPUT_PULLUP);
+    pinMode(BOARD_TBOX_G03, INPUT_PULLUP);
   #endif
 
   Serial.begin(115200);
@@ -256,7 +342,7 @@ void setup()
     Serial.println("Init GT911 Sensor success!");
 
     // Set touch max xy
-    touch.setMaxCoordinates(320, 240);
+    touch.setMaxCoordinates(320, 170);
 
     // Set swap xy
     touch.setSwapXY(true);
@@ -278,9 +364,9 @@ void setup()
   
   #ifdef HAS_SCREEN
     Serial.println("WIDTH, HEIGHT: " + String(TFT_WIDTH) + ", " + String(TFT_HEIGHT));
-    display_obj.tft.drawCentreString("ESP32 Marauder", 320/2, 240 * 0.33, 1);
-    display_obj.tft.drawCentreString("JustCallMeKoko", 320/2, 240 * 0.5, 1);
-    display_obj.tft.drawCentreString(display_obj.version_number, 320/2, 240 * 0.66, 1);
+    display_obj.tft.drawCentreString("ESP32 Marauder", 320/2, 170 * 0.33, 1);
+    display_obj.tft.drawCentreString("JustCallMeKoko", 320/2, 170 * 0.5, 1);
+    display_obj.tft.drawCentreString(display_obj.version_number, 320/2, 170 * 0.66, 1);
   #endif
 
 
@@ -293,9 +379,7 @@ void setup()
     #ifdef HAS_BUTTONS
       if (c_btn.justPressed()) {
         display_obj.headless_mode = true;
-
         backlightOff();
-
         Serial.println("Headless Mode enabled");
       }
     #endif
@@ -317,7 +401,7 @@ void setup()
 
   #ifdef HAS_SCREEN
     display_obj.tft.setTextColor(TFT_GREEN, TFT_BLACK);
-    display_obj.tft.drawCentreString("Initializing...", 320/2, 240 * 0.80, 1);
+    display_obj.tft.drawCentreString("Initializing...", 320/2, 170 * 0.80, 1);
     display_obj.tft.setTextColor(TFT_CYAN, TFT_BLACK);
   #endif
 
@@ -334,14 +418,14 @@ void setup()
         display_obj.tft.setTextColor(TFT_GREEN, TFT_BLACK);
         display_obj.tft.println(F(text_table0[3]));
         display_obj.tft.drawXBitmap(320/2 - 36,
-                      240*.85,
+                      170*.85,
                       menu_icons[STATUS_SD],
                       16,
                       16,
                       TFT_BLACK,
                       TFT_GREEN);
         //display_obj.tft.drawString("BAT", 0, 0, 1);
-        display_obj.tft.drawCentreString("SD", 320/2 - 36, 240 * 0.90, 1);
+        display_obj.tft.drawCentreString("SD", 320/2 - 36, 170 * 0.90, 1);
         display_obj.tft.setTextColor(TFT_CYAN, TFT_BLACK);
       #endif
     } else {
@@ -350,14 +434,14 @@ void setup()
         display_obj.tft.setTextColor(TFT_RED, TFT_BLACK);
         display_obj.tft.println(F(text_table0[4]));
         display_obj.tft.drawXBitmap(320/2 - 36,
-                      240*.85,
+                      170*.85,
                       menu_icons[STATUS_SD],
                       16,
                       16,
                       TFT_BLACK,
                       TFT_RED);
         //display_obj.tft.drawString("BAT", 0, 0, 1);
-        display_obj.tft.drawCentreString("SD", 320/2 - 36, 240 * 0.90, 1);
+        display_obj.tft.drawCentreString("SD", 320/2 - 36, 170 * 0.90, 1);
         display_obj.tft.setTextColor(TFT_CYAN, TFT_BLACK);
       #endif
     }
@@ -389,14 +473,14 @@ void setup()
   //Serial.println(F("Battery Done"));
   display_obj.tft.setTextColor(TFT_GREEN, TFT_BLACK);
   display_obj.tft.drawXBitmap(320/2 - 4,
-                      240*.85,
+                      170*.85,
                       menu_icons[STATUS_BAT],
                       16,
                       16,
                       TFT_BLACK,
                       TFT_GREEN);
   //display_obj.tft.drawString("BAT", 0, 0, 1);
-  display_obj.tft.drawCentreString("BAT", 320/2 - 4, 240 * 0.90, 1);
+  display_obj.tft.drawCentreString("BAT", 320/2 - 4, 170 * 0.90, 1);
   display_obj.tft.setTextColor(TFT_CYAN, TFT_BLACK);
 
   // Do some LED stuff
@@ -427,28 +511,28 @@ void setup()
       if (gps_obj.getGpsModuleStatus()) {
         display_obj.tft.setTextColor(TFT_GREEN, TFT_BLACK);
         display_obj.tft.drawXBitmap(320/2 + 28,
-                    240*.85,
+                    170*.85,
                     menu_icons[STATUS_GPS],
                     16,
                     16,
                     TFT_BLACK,
                     TFT_GREEN);
         //display_obj.tft.drawString("GPS", 0, 0, 1);
-        display_obj.tft.drawCentreString("GPS", 320/2 + 28, 240 * 0.90, 1);
+        display_obj.tft.drawCentreString("GPS", 320/2 + 28, 170 * 0.90, 1);
         display_obj.tft.println("GPS Module connected");
         display_obj.tft.setTextColor(TFT_CYAN, TFT_BLACK);
       }
       else {
         display_obj.tft.setTextColor(TFT_RED, TFT_BLACK);
         display_obj.tft.drawXBitmap(320/2 + 28,
-                    240*.85,
+                    170*.85,
                     menu_icons[STATUS_GPS],
                     16,
                     16,
                     TFT_BLACK,
                     TFT_RED);
         //display_obj.tft.drawString("GPS", 0, 0, 1);
-        display_obj.tft.drawCentreString("GPS", 320/2 + 28, 240 * 0.90, 1);
+        display_obj.tft.drawCentreString("GPS", 320/2 + 28, 170 * 0.90, 1);
         display_obj.tft.println("GPS Module failed to connect");
         display_obj.tft.setTextColor(TFT_CYAN, TFT_BLACK);
       }
@@ -471,8 +555,8 @@ void setup()
   cli_obj.RunSetup();
 
 //  display_obj.tft.setTextColor(TFT_GREEN, TFT_BLACK);
-//  display_obj.tft.drawCentreString("MESS WITH THE BEST", 320/2, 240 * 0.90, 1);
-//  display_obj.tft.drawCentreString("DIE LIKE THE REST", 320/2, 240 * 0.95, 1);
+//  display_obj.tft.drawCentreString("MESS WITH THE BEST", 320/2, 170 * 0.90, 1);
+//  display_obj.tft.drawCentreString("DIE LIKE THE REST", 320/2, 170 * 0.95, 1);
 //  display_obj.tft.setTextColor(TFT_WHITE, TFT_BLACK);
 }
 
@@ -498,8 +582,10 @@ void loop()
     #ifdef HAS_BUTTONS
       if (c_btn.isHeld()) {
         if (display_obj.headless_mode) {
-          backlightOn();
           display_obj.headless_mode = false;
+          backlightOn();
+          //Serial.println("Headless Mode disabled");
+
           while (!c_btn.justReleased()) {
             delay(1);
           }
@@ -571,6 +657,38 @@ void loop()
     stickc_led.main();
   #else
     led_obj.main(currentTime);
+  #endif
+
+  #ifdef HAS_POWER_BTN
+  #ifdef T_EMBED
+    int countDown = 3;
+    /* Long press power off */
+    if (b_btn.isHeld())
+    {
+        uint32_t time_count = millis();
+        while (!b_btn.justReleased())
+        {
+          // Display poweroff bar only if holding button
+          display_obj.tft.setTextSize(1);
+          display_obj.tft.setTextColor(TFT_GREEN, TFT_BLACK);
+          countDown = 3 - (millis() - time_count) / 1000;
+          if(countDown>0) display_obj.tft.drawCentreString("POWERING OFF IN "+String(countDown)+"...",160,32,1);
+          else { 
+            display_obj.tft.fillScreen(TFT_BLACK);
+            display_obj.tft.drawCentreString("GOODBYE!",160,80,1);
+            while(!b_btn.justReleased()) { delay(1); };
+            //delay(50);
+            display_obj.tft.fillScreen(TFT_BLACK);
+            powerOff();
+          }
+          delay(10);
+        }
+
+        // Clear text after releasing the button
+        delay(10);
+        display_obj.tft.fillRect(72, 32, 320 - 72, display_obj.tft.fontHeight(1), TFT_BLACK);
+    }
+  #endif
   #endif
 
   //if (wifi_scan_obj.currentScanMode == OTA_UPDATE)

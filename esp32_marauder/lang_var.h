@@ -29,7 +29,11 @@ PROGMEM const char text07[] = "Exit";
 PROGMEM const char text08[] = "Settings";
 PROGMEM const char text09[] = "Back";
 PROGMEM const char text10[] = "Channel:";
+#ifdef T_EMBED
+PROGMEM const char text11[] = "Press user button to exit";
+#else
 PROGMEM const char text11[] = "Touch screen to exit";
+#endif
 PROGMEM const char text12[] = "Cancel";
 PROGMEM const char text13[] = "Save";
 PROGMEM const char text14[] = "Yes";

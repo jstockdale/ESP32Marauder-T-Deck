@@ -7,6 +7,11 @@
 TouchDrvGT911 touch;
 
 #ifdef HAS_SCREEN
+extern void backlightOff();
+#ifdef T_EMBED
+#include <RotaryEncoder.h>
+extern RotaryEncoder *encoder;
+#endif
 
 extern const unsigned char menu_icons[][66];
 PROGMEM lv_obj_t * slider_label;
@@ -124,7 +129,7 @@ MenuFunctions::MenuFunctions()
     lv_disp_drv_t disp_drv;
     lv_disp_drv_init(&disp_drv);
     disp_drv.hor_res = 320;
-    disp_drv.ver_res = 240;
+    disp_drv.ver_res = 170;
     disp_drv.flush_cb = my_disp_flush;
     disp_drv.buffer = &disp_buf;
     lv_disp_drv_register(&disp_drv);
@@ -155,7 +160,7 @@ MenuFunctions::MenuFunctions()
     extern WiFiScan wifi_scan_obj;
   
     lv_obj_t * list1 = lv_list_create(lv_scr_act(), NULL);
-    lv_obj_set_size(list1, 320, 240);
+    lv_obj_set_size(list1, 320, 170);
     lv_obj_set_width(list1, LV_HOR_RES);
     lv_obj_align(list1, NULL, LV_ALIGN_CENTER, 0, 0);
   
@@ -258,7 +263,7 @@ MenuFunctions::MenuFunctions()
     extern EvilPortal evil_portal_obj;
   
     lv_obj_t * list1 = lv_list_create(lv_scr_act(), NULL);
-    lv_obj_set_size(list1, 320, 240);
+    lv_obj_set_size(list1, 320, 170);
     lv_obj_set_width(list1, LV_HOR_RES);
     lv_obj_align(list1, NULL, LV_ALIGN_CENTER, 0, 0);
   
@@ -340,7 +345,7 @@ MenuFunctions::MenuFunctions()
     extern LinkedList<AirTag>* airtags;
   
     lv_obj_t * list1 = lv_list_create(lv_scr_act(), NULL);
-    lv_obj_set_size(list1, 320, 240);
+    lv_obj_set_size(list1, 320, 170);
     lv_obj_set_width(list1, LV_HOR_RES);
     lv_obj_align(list1, NULL, LV_ALIGN_CENTER, 0, 0);
   
@@ -682,8 +687,10 @@ void MenuFunctions::main(uint32_t currentTime)
   // Pressed will be set true is there is a valid touch on the screen
   int pre_getTouch = millis();
 
-  // getTouch causes a 10ms delay which makes beacon spam less effective
-  #ifdef HAS_ST7789
+  #if defined(T_EMBED)
+    pressed = b_btn.justPressed();
+  #elif defined(HAS_ST7789)
+    // getTouch causes a 10ms delay which makes beacon spam less effective
     if (!this->disable_touch)
         points = this->updateTouch(t_x, t_y);
         pressed = points && points > 0;
@@ -696,7 +703,9 @@ void MenuFunctions::main(uint32_t currentTime)
         (pressed) &&
         (wifi_scan_obj.currentScanMode != OTA_UPDATE) &&
         (wifi_scan_obj.currentScanMode != ESP_UPDATE) &&
+        #ifndef T_EMBED
         (wifi_scan_obj.currentScanMode != SHOW_INFO) &&
+        #endif
         (wifi_scan_obj.currentScanMode != WIFI_SCAN_GPS_DATA) &&
         (wifi_scan_obj.currentScanMode != WIFI_SCAN_GPS_NMEA))
     {
@@ -896,16 +905,22 @@ void MenuFunctions::main(uint32_t currentTime)
     y = -1;
   #endif
 
+  #ifdef T_EMBED
+  int last_direction = (int)encoder->getDirection();
+  #endif
+  
   #ifdef HAS_BUTTONS
     #if !(defined(MARAUDER_V6) || defined(MARAUDER_V6_1))
       #ifndef MARAUDER_M5STICKC
       bool u_btn_pressed = false;
-      #ifdef T_DECK
+      #if defined(T_DECK)
         u_btn_pressed = trackball_obj.menuPress(TRACKBALL_UP);
+      #elif defined(T_EMBED)
+        u_btn_pressed = (last_direction > 0);
       #else
         u_btn_pressed = u_btn.justPressed();
       #endif
-        if (u_btn_pressed){
+        if (!display_obj.headless_mode && u_btn_pressed){
           if ((wifi_scan_obj.currentScanMode == WIFI_SCAN_OFF) ||
               (wifi_scan_obj.currentScanMode == OTA_UPDATE)) {
             if (current_menu->selected > 0) {
@@ -941,12 +956,14 @@ void MenuFunctions::main(uint32_t currentTime)
         }
       #endif
       bool d_btn_pressed = false;
-      #ifdef T_DECK
+      #if defined(T_DECK)
         d_btn_pressed = trackball_obj.menuPress(TRACKBALL_DOWN);
+      #elif defined(T_EMBED)
+        d_btn_pressed = (last_direction < 0);
       #else
         d_btn_pressed = d_btn.justPressed();
       #endif
-      if (d_btn_pressed){
+      if (!display_obj.headless_mode && d_btn_pressed){
         if ((wifi_scan_obj.currentScanMode == WIFI_SCAN_OFF) ||
             (wifi_scan_obj.currentScanMode == OTA_UPDATE)) {
           if (current_menu->selected < current_menu->list->size() - 1) {
@@ -980,9 +997,16 @@ void MenuFunctions::main(uint32_t currentTime)
             wifi_scan_obj.changeChannel(14);
         }
       }
-      if(c_btn_press){
+      if(!display_obj.headless_mode && c_btn.justPressed()){
         current_menu->list->get(current_menu->selected).callable();
       }
+      #ifdef HAS_B
+      if (!display_obj.headless_mode && (wifi_scan_obj.currentScanMode == WIFI_SCAN_OFF) && b_btn.justPressed()) {
+        if(current_menu->parentMenu != NULL) {
+          changeMenu(current_menu->parentMenu);
+        }
+      }
+      #endif
     #endif
   #endif
 }
@@ -1099,15 +1123,16 @@ void MenuFunctions::updateStatusBar()
   #endif
   
   uint16_t the_color; 
-
+  
+  // GPS Stuff
+  #ifdef HAS_GPS
+  
   if (this->old_gps_sat_count != gps_obj.getNumSats()) {
     this->old_gps_sat_count = gps_obj.getNumSats();
-    display_obj.tft.fillRect(0, 0, 240, STATUS_BAR_WIDTH, STATUSBAR_COLOR);
+    display_obj.tft.fillRect(0, 0, 170, STATUS_BAR_WIDTH, STATUSBAR_COLOR);
     status_changed = true;
   }
 
-  // GPS Stuff
-  #ifdef HAS_GPS
     if (gps_obj.getGpsModuleStatus()) {
       if (gps_obj.getFixStatus())
         the_color = TFT_GREEN;
@@ -1140,7 +1165,7 @@ void MenuFunctions::updateStatusBar()
     #if defined(MARAUDER_MINI) || defined(MARAUDER_M5STICKC) || defined(MARAUDER_REV_FEATHER)
       display_obj.tft.fillRect(43, 0, TFT_WIDTH * 0.21, STATUS_BAR_WIDTH, STATUSBAR_COLOR);
     #else
-      display_obj.tft.fillRect(60, 0, TFT_WIDTH * 0.21, STATUS_BAR_WIDTH, STATUSBAR_COLOR);
+      display_obj.tft.fillRect(60, 0, 320 * 0.18, STATUS_BAR_WIDTH, STATUSBAR_COLOR);
     #endif
     #ifdef HAS_ST7789
       display_obj.tft.drawString("CH: " + (String)wifi_scan_obj.set_channel, 60, 0, 2);
@@ -1325,7 +1350,11 @@ void MenuFunctions::orientDisplay()
 {
   display_obj.tft.init();
 
+  #ifdef T_EMBED
+  display_obj.tft.setRotation(3);
+  #else
   display_obj.tft.setRotation(1); // Portrait
+  #endif
 
   display_obj.tft.setCursor(0, 0);
 
@@ -1522,19 +1551,14 @@ void MenuFunctions::RunSetup()
   this->addNodes(&mainMenu, text_table1[9], TFT_BLUE, NULL, DEVICE, [this]() {
     this->changeMenu(&deviceMenu);
   });
-    this->addNodes(&mainMenu, text_table1[63], TFT_PURPLE, NULL, HEADLESS, []() {
-      #ifdef HAS_SCREEN
-        #ifdef MARAUDER_MINI
-          digitalWrite(TFT_BL, HIGH);
-        #endif
-    
-        #ifndef MARAUDER_MINI
-          digitalWrite(TFT_BL, LOW);
-        #endif
-      #endif
-      display_obj.headless_mode = true;
-      display_obj.exit_draw = true;
+  #ifdef HAS_SCREEN
+  this->addNodes(&mainMenu, text_table1[63], TFT_PURPLE, NULL, HEADLESS, []() {
+    display_obj.headless_mode = true;
+    backlightOff();
+    //Serial.println("Headless Mode enabled");
+    //display_obj.exit_draw = true;
   });
+  #endif
   this->addNodes(&mainMenu, text_table1[30], TFT_LIGHTGREY, NULL, REBOOT, []() {
     ESP.restart();
   });
@@ -1547,9 +1571,11 @@ void MenuFunctions::RunSetup()
   this->addNodes(&wifiMenu, text_table1[31], TFT_YELLOW, NULL, SNIFFERS, [this]() {
     this->changeMenu(&wifiSnifferMenu);
   });
+  #ifdef HAS_GPS
   this->addNodes(&wifiMenu, "Wardriving", TFT_GREEN, NULL, BEACON_SNIFF, [this]() {
     this->changeMenu(&wardrivingMenu);
   });
+  #endif
   this->addNodes(&wifiMenu, text_table1[32], TFT_RED, NULL, ATTACKS, [this]() {
     this->changeMenu(&wifiAttackMenu);
   });
@@ -1625,13 +1651,14 @@ void MenuFunctions::RunSetup()
       wifi_scan_obj.StartScan(WIFI_SCAN_SIG_STREN, TFT_CYAN);
     });
   #endif
-
+  
+  #ifdef HAS_GPS
   // Build Wardriving menu
   wardrivingMenu.parentMenu = &wifiMenu; // Main Menu is second menu parent
   this->addNodes(&wardrivingMenu, text09, TFT_LIGHTGREY, NULL, 0, [this]() {
     this->changeMenu(wardrivingMenu.parentMenu);
   });
-  #ifdef HAS_GPS
+
     if (gps_obj.getGpsModuleStatus()) {
       this->addNodes(&wardrivingMenu, "Wardrive", TFT_GREEN, NULL, BEACON_SNIFF, [this]() {
         display_obj.clearScreen();
@@ -1756,13 +1783,18 @@ void MenuFunctions::RunSetup()
       selectEPHTMLGFX();
     });
   #else // Mini EP HTML select
+    #ifdef T_EMBED
+    int last_direction = (int)encoder->getDirection();
+    #endif
     this->addNodes(&wifiGeneralMenu, "Select EP HTML File", TFT_CYAN, NULL, KEYBOARD_ICO, [this](){
       this->changeMenu(&htmlMenu);
       #if (defined(HAS_BUTTONS) && defined(HAS_SD)) 
         #if !(defined(MARAUDER_V6) || defined(MARAUDER_V6_1))
           while(true) {
-              #ifdef T_DECK
+              #if defined(T_DECK)
                 d_btn_pressed = trackball_obj.menuPress(TRACKBALL_DOWN);
+              #elif defined(T_EMBED)
+                d_btn_pressed = (last_direction < 0);
               #else
                 d_btn_pressed = d_btn.justPressed();
               #endif
@@ -1777,8 +1809,10 @@ void MenuFunctions::RunSetup()
               this->displayCurrentMenu();
             }
             #ifndef MARAUDER_M5STICKC
-              #ifdef T_DECK
+              #if defined(T_DECK)
                 u_btn_pressed = trackball_obj.menuPress(TRACKBALL_UP);
+              #elif defined(T_EMBED)
+                u_btn_pressed = (last_direction > 0);
               #else
                 u_btn_pressed = u_btn.justPressed();
               #endif
@@ -2206,7 +2240,7 @@ void MenuFunctions::RunSetup()
         #ifndef HAS_ST7789
           #ifdef HAS_BUTTONS
             this->changeMenu(&sdDeleteMenu);
-            #if !(defined(MARAUDER_V6) || defined(MARAUDER_V6_1) || defined(LILYGO_T_DECK))
+            #if !(defined(MARAUDER_V6) || defined(MARAUDER_V6_1) || defined(LILYGO_T_DECK) || defined(LILYGO_T_EMBED))
 
               bool deleting = true;
 

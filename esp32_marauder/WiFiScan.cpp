@@ -1454,7 +1454,11 @@ void WiFiScan::RunAPScan(uint8_t scan_mode, uint16_t color)
 void WiFiScan::RunLvJoinWiFi(uint8_t scan_mode, uint16_t color) {
 
   display_obj.tft.init();
+  #ifdef T_EMBED
+  display_obj.tft.setRotation(3);
+  #else
   display_obj.tft.setRotation(1);
+  #endif
 
 #ifdef TFT_SHIELD
   uint16_t calData[5] = { 391, 3491, 266, 3505, 7 }; // Landscape TFT Shield
@@ -1763,7 +1767,7 @@ void WiFiScan::RunInfo()
 #ifdef HAS_SCREEN
   display_obj.tft.setTextWrap(false);
   display_obj.tft.setFreeFont(NULL);
-  display_obj.tft.setCursor(0, SCREEN_HEIGHT / 3);
+  display_obj.tft.setCursor(0, 170 / 3);
   display_obj.tft.setTextSize(1);
   display_obj.tft.setTextColor(TFT_CYAN);
   display_obj.tft.println(text_table4[20]);
@@ -1843,7 +1847,11 @@ void WiFiScan::RunPacketMonitor(uint8_t scan_mode, uint16_t color)
 
 #ifdef HAS_SCREEN
   display_obj.tft.init();
+  #ifdef T_EMBED
+  display_obj.tft.setRotation(3);
+  #else
   display_obj.tft.setRotation(1);
+  #endif
   display_obj.tft.fillScreen(TFT_BLACK);
 #endif
 
@@ -1921,7 +1929,11 @@ void WiFiScan::RunEapolScan(uint8_t scan_mode, uint16_t color)
 #ifdef HAS_ST7789
 #ifdef HAS_SCREEN
   display_obj.tft.init();
+  #ifdef T_EMBED
+  display_obj.tft.setRotation(3);
+  #else
   display_obj.tft.setRotation(1);
+  #endif
   display_obj.tft.fillScreen(TFT_BLACK);
 #endif
 

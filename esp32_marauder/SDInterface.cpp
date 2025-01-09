@@ -73,11 +73,11 @@ bool SDInterface::initSD() {
         this->card_sz = sz;
       }
 
-      if (!SD.exists("/SCRIPTS")) {
-        Serial.println("/SCRIPTS does not exist. Creating...");
+      if (!SD.exists("/scripts")) {
+        Serial.println("/scripts does not exist. Creating...");
 
-        SD.mkdir("/SCRIPTS");
-        Serial.println("/SCRIPTS created");
+        SD.mkdir("/scripts");
+        Serial.println("/scripts created");
       }
 
       this->sd_files = new LinkedList<String>();
