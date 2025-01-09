@@ -10,7 +10,7 @@
   <br><br>
   <b>ESP32Marauder by @justcallmekoko</b>
   <br>
-  <b>T-Deck port by @jstockdale</b>
+  <b>T-Embed (CC1101) port by @jstockdale</b>
   <br><br>
   <a href="https://github.com/jstockdale/ESP32Marauder/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>
   <br>
@@ -24,28 +24,27 @@ Download the [latest release](https://github.com/justcallmekoko/ESP32Marauder/re
 
 Check out the project [wiki](https://github.com/justcallmekoko/ESP32Marauder/wiki) for a full overview of the ESP32 Marauder
 
-# T-Deck Edition
+# T-Embed (CC1101) Edition
 This is an early work in progress. It's mostly stable. Some features aren't fully working. A quick summary of the current progress is below.
 ```
 [X] Boots
+[X] LEDs work
+[X] SD Card works
 [X] Serial and CLI both work
 [X] ST7899 Screen works
-[X] GT911 Touch library
-[X] L76K GPS works
-   If it stops working / hangs during initialization, reset your device.
-[X] Battery level works
-[X] SD Card works
-[X] Trackball works
+[X] Rotary Encoder works
+[X] Support User button as Back button / hold to Power Off
 [X] Headless menu option turns off screen (long press trackball/center button to resume)
 [X] Improved serial console (non-blocking! don't user arrow keys for now lol)
 [X] Moved Evil Portal files to /portals directory on SD card
 [X] Added ChannelHop Setting so you can enable or disable channel hopping
 --
-[ ] Keyboard - TODO(jstockdale): Add keyboard support
+[ ] Battery level
+[ ] Optional GPS module support
 [ ] Serial Console - TODO(jstockdale): Handle arrow keys
 ```
 I recommend using the excellent [M5Launcher](https://github.com/bmorcelli/M5Stick-Launcher) from @bmorcelli to load this and other firmware from the sd card. This makes development easier and also allows you to quick switch between different useful firmwares (eg. Meshtastic, Marauder, and more!)
 
 Please direct any feedback to the Issues page. This is alpha, pre-release software. And comes with no warranty of fitness or guarantees of any time. Use at your own risk. Thanks! :-)
 
-Latest pre-release development build: [pre_alpha_aq12](https://github.com/jstockdale/ESP32Marauder-T-Deck/blob/t-deck/Release%20Bins/esp32_marauder_v1_0_0_20250103_tdeck_pre_alpha_aq12.bin)
+Latest pre-release development build: [pre_alpha_ab16](https://github.com/jstockdale/ESP32Marauder-T-Deck/blob/t-embed/Release%20Bins/esp32_marauder_v1_0_0_20250109_tembed_pre_alpha_ab16.bin)
