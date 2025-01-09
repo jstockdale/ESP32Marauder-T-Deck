@@ -31,7 +31,7 @@ This is an early work in progress. It's mostly stable. Some features aren't full
 [X] LEDs work
 [X] SD Card works (if it's not being detected, reinsert the sd card and reboot)
 [X] Serial and CLI both work
-[X] ST7899 Screen works
+[X] ST7789 Screen works
 [X] Rotary Encoder works
 [X] Support User button as Back button / hold to Power Off
 [X] Headless menu option turns off screen (long press trackball/center button to resume)
