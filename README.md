@@ -29,7 +29,7 @@ This is an early work in progress. It's mostly stable. Some features aren't full
 ```
 [X] Boots
 [X] Serial and CLI both work
-[X] ST7899 Screen works
+[X] ST7789 Screen works
 [X] GT911 Touch library
 [X] L76K GPS works
    If it stops working / hangs during initialization, reset your device.
