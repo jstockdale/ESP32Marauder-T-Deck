@@ -20,7 +20,7 @@
 </p>
 
 ## Getting Started
-Download the [latest release](https://github.com/justcallmekoko/ESP32Marauder/releases/latest) of the firmware.  
+This is a fork of JustCallMeKoko's ESP32Marauder, ported to the LilyGo T-Deck (Plus).
 
 Check out the project [wiki](https://github.com/justcallmekoko/ESP32Marauder/wiki) for a full overview of the ESP32 Marauder
 
@@ -49,3 +49,5 @@ I recommend using the excellent [M5Launcher](https://github.com/bmorcelli/M5Stic
 Please direct any feedback to the Issues page. This is alpha, pre-release software. And comes with no warranty of fitness or guarantees of any time. Use at your own risk. Thanks! :-)
 
 Latest pre-release development build: [pre_alpha_aq12](https://github.com/jstockdale/ESP32Marauder-T-Deck/blob/t-deck/Release%20Bins/esp32_marauder_v1_0_0_20250103_tdeck_pre_alpha_aq12.bin)
+
+Note on SD Cards: Lots of SD cards that support SPI should work. But many seem to have issues. I have personally had good luck with 32GB SanDisk Ultra Max Endurance and others have reported success witi 32GB SanDisk Ultra units as well. Special thanks to GreyFox for helping figure this out!
