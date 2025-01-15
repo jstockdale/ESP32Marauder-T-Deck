@@ -50,4 +50,4 @@ Please direct any feedback to the Issues page. This is alpha, pre-release softwa
 
 Latest pre-release development build: [pre_alpha_aq12](https://github.com/jstockdale/ESP32Marauder-T-Deck/blob/t-deck/Release%20Bins/esp32_marauder_v1_0_0_20250103_tdeck_pre_alpha_aq12.bin)
 
-Note on SD Cards: Lots of SD cards that support SPI should work. But many seem to have issues. I have personally had good luck with 32GB SanDisk Ultra Max Endurance and others have reported success witi 32GB SanDisk Ultra units as well. Special thanks to GreyFox for helping figure this out!
+Note on SD Cards: Lots of SD cards that support SPI should work. But many seem to have issues. I have personally had good luck with 32GB SanDisk Ultra Max Endurance and others have reported success with 32GB SanDisk Ultra units as well. Special thanks to GreyFox for helping figure this out!
