@@ -37,7 +37,7 @@ void Display::RunSetup()
   #endif
 
   #ifdef T_EMBED
-    tft.setRotation(3);
+    tft.setRotation(0);
   #endif
 
   tft.setCursor(0, 0);
