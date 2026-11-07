@@ -9,9 +9,13 @@
 
 #include <Wire.h>
 
-#define I2C_SDA 33
-#define I2C_SCL 22
+#define I2C_SDA 18
+#define I2C_SCL 8
 #define IP5306_ADDR 0x75
+#define BOARD_BAT_ADC       4
+#define BOARD_POWERON       10
+#define BATTERY_ANALOG_ON 0
+
 
 class BatteryInterface {
   private:
@@ -20,6 +24,7 @@ class BatteryInterface {
   public:
     int8_t battery_level = 0;
     int8_t old_level = 0;
+    int16_t battery_value = 0;
     bool i2c_supported = false;
 
     BatteryInterface();

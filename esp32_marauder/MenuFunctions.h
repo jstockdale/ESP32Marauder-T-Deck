@@ -16,11 +16,17 @@
 
 #ifdef HAS_BUTTONS
   #include "Switches.h"
-  extern Switches u_btn;
-  extern Switches d_btn;
-  extern Switches l_btn;
-  extern Switches r_btn;
+  #ifdef T_DECK
+    #include "Trackball.h"
+    extern Trackball trackball_obj;
+  #else
+    extern Switches u_btn;
+    extern Switches d_btn;
+    extern Switches l_btn;
+    extern Switches r_btn;
+  #endif
   extern Switches c_btn;
+  extern Switches b_btn;
 #endif
 
 extern WiFiScan wifi_scan_obj;
@@ -31,9 +37,8 @@ extern Settings settings_obj;
 #define FLASH_BUTTON 0
 
 #if BATTERY_ANALOG_ON == 1
-#define BATTERY_PIN 13
-#define ANALOG_PIN 34
-#define CHARGING_PIN 27
+#define ANALOG_PIN 4
+//#define CHARGING_PIN 10
 #endif
 
 // Icon definitions
@@ -73,6 +78,7 @@ extern Settings settings_obj;
 #define GPS_MENU 33
 #define DISABLE_TOUCH 34
 #define FLIPPER 35
+#define HEADLESS 15
 
 PROGMEM void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p);
 PROGMEM bool my_touchpad_read(lv_indev_drv_t * indev_driver, lv_indev_data_t * data);
@@ -156,7 +162,7 @@ class MenuFunctions
     #ifdef HAS_BT
       Menu airtagMenu;
     #endif
-    #ifndef HAS_ILI9341
+    #ifndef HAS_ST7789
       Menu wifiStationMenu;
     #endif
 
@@ -187,11 +193,11 @@ class MenuFunctions
     void displaySetting(String key, Menu* menu, int index);
     void buttonSelected(uint8_t b, int8_t x = -1);
     void buttonNotSelected(uint8_t b, int8_t x = -1);
-    #if (!defined(HAS_ILI9341) && defined(HAS_BUTTONS))
+    #if (!defined(HAS_ST7789) && defined(HAS_BUTTONS))
       void miniKeyboard(Menu * targetMenu);
     #endif
 
-    uint8_t updateTouch(uint16_t *x, uint16_t *y, uint16_t threshold = 600);
+    uint8_t updateTouch(int16_t *x, int16_t *y, uint16_t threshold = 600);
 
   public:
     MenuFunctions();

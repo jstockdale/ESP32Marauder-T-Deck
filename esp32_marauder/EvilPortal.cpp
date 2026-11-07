@@ -18,7 +18,7 @@ void EvilPortal::setup() {
 
   #ifdef HAS_SD
     if (sd_obj.supported) {
-      sd_obj.listDirToLinkedList(html_files, "/", "html");
+      sd_obj.listDirToLinkedList(html_files, "/portals", "html");
 
       Serial.println("Evil Portal Found " + (String)html_files->size() + " HTML files");
     }
@@ -93,16 +93,16 @@ bool EvilPortal::setHtml() {
   }
   Serial.println("Setting HTML...");
   #ifdef HAS_SD
-    File html_file = sd_obj.getFile("/" + this->target_html_name);
+    File html_file = sd_obj.getFile("/portals/" + this->target_html_name);
   #else
     File html_file;
   #endif
   if (!html_file) {
     #ifdef HAS_SCREEN
-      this->sendToDisplay("Could not find /" + this->target_html_name);
+      this->sendToDisplay("Could not find /portals/" + this->target_html_name);
       this->sendToDisplay("Touch to exit...");
     #endif
-    Serial.println("Could not find /" + this->target_html_name + ". Use stopscan...");
+    Serial.println("Could not find /portals/" + this->target_html_name + ". Use stopscan...");
     return false;
   }
   else {

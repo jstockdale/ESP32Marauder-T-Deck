@@ -8,24 +8,43 @@
 <p align="center">
   <b>A suite of WiFi/Bluetooth offensive and defensive tools for the ESP32</b>
   <br><br>
-  <a href="https://github.com/justcallmekoko/ESP32Marauder/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>
-  <a href="https://gitter.im/justcallmekoko/ESP32Marauder"><img alt="Gitter" src="https://badges.gitter.im/justcallmekoko/ESP32Marauder.png"/></a>
-  <a href="https://github.com/justcallmekoko/ESP32Marauder/releases/latest"><img src="https://img.shields.io/github/downloads/justcallmekoko/ESP32Marauder/total" alt="Downloads"/></a>
+  <b>ESP32Marauder by @justcallmekoko</b>
   <br>
-  <a href="https://twitter.com/intent/follow?screen_name=jcmkyoutube"><img src="https://img.shields.io/twitter/follow/jcmkyoutube?style=social&logo=twitter" alt="Twitter"></a>
-  <a href="https://www.instagram.com/just.call.me.koko"><img src="https://img.shields.io/badge/Follow%20Me-Instagram-orange" alt="Instagram"/></a>
+  <b>T-Embed (CC1101) port by @jstockdale</b>
   <br><br>
-  <a href="https://www.tindie.com/products/justcallmekoko/esp32-marauder/"><img src="https://d2ss6ovg47m0r5.cloudfront.net/badges/tindie-larges.png" alt="I sell on Tindie" width="200" height="104"></a>
+  <a href="https://github.com/jstockdale/ESP32Marauder/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>
   <br>
-  <a href="https://www.twitch.tv/willstunforfood"><img src="https://assets.stickpng.com/images/580b57fcd9996e24bc43c540.png" alt="Twitch WillStunForFood" width="200"></a>
+  <a href="https://twitter.com/intent/follow?screen_name=stockdiesel"><img src="https://img.shields.io/twitter/follow/stockdiesel?style=social&logo=twitter" alt="Twitter"></a>
+  <a href="https://www.instagram.com/jstockdale"><img src="https://img.shields.io/badge/Follow%20Me-Instagram-orange" alt="Instagram"/></a>
+  <br>
 </p>
-    
-[![Build and Push](https://github.com/justcallmekoko/ESP32Marauder/actions/workflows/build_push.yml/badge.svg)](https://github.com/justcallmekoko/ESP32Marauder/actions/workflows/build_push.yml)
 
 ## Getting Started
 Download the [latest release](https://github.com/justcallmekoko/ESP32Marauder/releases/latest) of the firmware.  
 
 Check out the project [wiki](https://github.com/justcallmekoko/ESP32Marauder/wiki) for a full overview of the ESP32 Marauder
 
-# For Sale Now
-You can buy the ESP32 Marauder using [this link](https://www.tindie.com/products/justcallmekoko/esp32-marauder/)
+# T-Embed (CC1101) Edition
+This is an early work in progress. It's mostly stable. Some features aren't fully working. A quick summary of the current progress is below.
+```
+[X] Boots
+[X] LEDs work
+[X] SD Card works (if it's not being detected, reinsert the sd card and reboot)
+[X] Serial and CLI both work
+[X] ST7789 Screen works
+[X] Rotary Encoder works
+[X] Support User button as Back button / hold to Power Off
+[X] Headless menu option turns off screen (long press trackball/center button to resume)
+[X] Improved serial console (non-blocking! don't user arrow keys for now lol)
+[X] Moved Evil Portal files to /portals directory on SD card
+[X] Added ChannelHop Setting so you can enable or disable channel hopping
+--
+[ ] Battery level
+[ ] Optional GPS module support
+[ ] Serial Console - TODO(jstockdale): Handle arrow keys
+```
+I recommend using the excellent [M5Launcher](https://github.com/bmorcelli/M5Stick-Launcher) from @bmorcelli to load this and other firmware from the sd card. This makes development easier and also allows you to quick switch between different useful firmwares (eg. Meshtastic, Marauder, and more!)
+
+Please direct any feedback to the Issues page. This is alpha, pre-release software. And comes with no warranty of fitness or guarantees of any time. Use at your own risk. Thanks! :-)
+
+Latest pre-release development build: [pre_alpha_ab23](https://github.com/jstockdale/ESP32Marauder-T-Deck/blob/t-embed/Release%20Bins/esp32_marauder_v1_0_0_20250109_tembed_pre_alpha_ab23.bin)
